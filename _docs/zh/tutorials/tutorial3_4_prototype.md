@@ -124,6 +124,20 @@ lang: zh
 
 这样，我们就编辑完了第一棵行为树。
 
+注意，如果点击当前行为树主视图窗口右上角的“检查错误”按钮，如下图所示：
+
+![]({{site.url}}{{site.baseurl}}/img/tutorials/tutorial3/checkError.png)
+
+图4.5 检查错误
+
+检查当前行为树是否包含错误，将会弹出如下图所示的错误信息提示框：
+
+![]({{site.url}}{{site.baseurl}}/img/tutorials/tutorial3/errorInfo.png)
+
+图4.6 错误信息提示框
+
+如何消除该错误，请查看使用说明文档[动作节点]({{ site.baseurl }}/docs/zh/references/action/)。
+
 ### 5 生成C++源码文件
 
 为了方便讨论，下面只介绍生成C++源码文件，生成C#源码文件的流程基本类似，也可以分别参考下面两篇文档：
