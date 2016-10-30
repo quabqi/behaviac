@@ -45,7 +45,7 @@ namespace behaviac
 			bb->AddProperty("vector<bool>", true, "STV_LIST_BOOL_0", "0:", "ParTestAgentBase");
 			bb->AddProperty("vector<char>", true, "STV_LIST_CHAR_0", "0:", "ParTestAgentBase");
 			bb->AddProperty("vector<TNS::NE::NAT::eColor>", true, "STV_LIST_ECOLOR_0", "0:", "ParTestAgentBase");
-			bb->AddProperty("vector<subyte>", true, "STV_LIST_SBYTE_0", "0:", "ParTestAgentBase");
+			bb->AddProperty("vector<sbyte>", true, "STV_LIST_SBYTE_0", "0:", "ParTestAgentBase");
 			bb->AddProperty("bool", false, "TV_BOOL_0", "false", "ParTestAgentBase");
 			bb->AddProperty("ubyte", false, "TV_BYTE_0", "0", "ParTestAgentBase");
 			bb->AddProperty("char", false, "TV_CHAR_0", "", "ParTestAgentBase");
@@ -54,8 +54,8 @@ namespace behaviac
 			bb->AddProperty("vector<ubyte>", false, "TV_LIST_BYTE_0", "0:", "ParTestAgentBase");
 			bb->AddProperty("vector<char>", false, "TV_LIST_CHAR_0", "0:", "ParTestAgentBase");
 			bb->AddProperty("vector<TNS::NE::NAT::eColor>", false, "TV_LIST_ECOLOR_0", "0:", "ParTestAgentBase");
-			bb->AddProperty("vector<subyte>", false, "TV_LIST_SBYTE_0", "0:", "ParTestAgentBase");
-			bb->AddProperty("subyte", false, "TV_SBYTE_0", "0", "ParTestAgentBase");
+			bb->AddProperty("vector<sbyte>", false, "TV_LIST_SBYTE_0", "0:", "ParTestAgentBase");
+			bb->AddProperty("sbyte", false, "TV_SBYTE_0", "0", "ParTestAgentBase");
 
 			// ParTestAgent
 			bb = BEHAVIAC_NEW AgentProperties("ParTestAgent");
@@ -63,11 +63,11 @@ namespace behaviac
 			bb->AddProperty("int", true, "STV_INT_0", "0", "ParTestAgent");
 			bb->AddProperty("TNS::ST::PER::WRK::kEmployee", true, "STV_KEMPLOYEE_0", "{boss=null;car={brand=\"\";color=RED;price=0;};code=A;id=0;isMale=false;name=\"\";skinColor=RED;weight=0;}", "ParTestAgent");
 			bb->AddProperty("vector<int>", true, "STV_LIST_INT_0", "0:", "ParTestAgent");
-			bb->AddProperty("behaviac::vector<TNS::ST::PER::WRK::kEmployee>", true, "STV_LIST_KEMPLOYEE_0", "0:", "ParTestAgent");
+			bb->AddProperty("vector<TNS::ST::PER::WRK::kEmployee>", true, "STV_LIST_KEMPLOYEE_0", "0:", "ParTestAgent");
 			bb->AddProperty("int", false, "TV_INT_0", "0", "ParTestAgent");
 			bb->AddProperty("TNS::ST::PER::WRK::kEmployee", false, "TV_KEMPLOYEE_0", "{boss=null;car={brand=\"\";color=RED;price=0;};code=A;id=0;isMale=false;name=\"\";skinColor=RED;weight=0;}", "ParTestAgent");
 			bb->AddProperty("vector<int>", false, "TV_LIST_INT_0", "0:", "ParTestAgent");
-			bb->AddProperty("behaviac::vector<TNS::ST::PER::WRK::kEmployee>", false, "TV_LIST_KEMPLOYEE_0", "0:", "ParTestAgent");
+			bb->AddProperty("vector<TNS::ST::PER::WRK::kEmployee>", false, "TV_LIST_KEMPLOYEE_0", "0:", "ParTestAgent");
 			bb->AddProperty("long", false, "TV_LONG_0", "0", "ParTestAgent");
 			bb->AddProperty("short", false, "TV_SHORT_0", "0", "ParTestAgent");
 			bb->AddProperty("ushort", false, "TV_USHORT_0", "0", "ParTestAgent");
@@ -77,7 +77,7 @@ namespace behaviac
 			bb->AddProperty("vector<bool>", true, "STV_LIST_BOOL_0", "0:", "ParTestAgent");
 			bb->AddProperty("vector<char>", true, "STV_LIST_CHAR_0", "0:", "ParTestAgent");
 			bb->AddProperty("vector<TNS::NE::NAT::eColor>", true, "STV_LIST_ECOLOR_0", "0:", "ParTestAgent");
-			bb->AddProperty("vector<subyte>", true, "STV_LIST_SBYTE_0", "0:", "ParTestAgent");
+			bb->AddProperty("vector<sbyte>", true, "STV_LIST_SBYTE_0", "0:", "ParTestAgent");
 			bb->AddProperty("bool", false, "TV_BOOL_0", "false", "ParTestAgent");
 			bb->AddProperty("ubyte", false, "TV_BYTE_0", "0", "ParTestAgent");
 			bb->AddProperty("char", false, "TV_CHAR_0", "", "ParTestAgent");
@@ -86,17 +86,21 @@ namespace behaviac
 			bb->AddProperty("vector<ubyte>", false, "TV_LIST_BYTE_0", "0:", "ParTestAgent");
 			bb->AddProperty("vector<char>", false, "TV_LIST_CHAR_0", "0:", "ParTestAgent");
 			bb->AddProperty("vector<TNS::NE::NAT::eColor>", false, "TV_LIST_ECOLOR_0", "0:", "ParTestAgent");
-			bb->AddProperty("vector<subyte>", false, "TV_LIST_SBYTE_0", "0:", "ParTestAgent");
-			bb->AddProperty("subyte", false, "TV_SBYTE_0", "0", "ParTestAgent");
+			bb->AddProperty("vector<sbyte>", false, "TV_LIST_SBYTE_0", "0:", "ParTestAgent");
+			bb->AddProperty("sbyte", false, "TV_SBYTE_0", "0", "ParTestAgent");
+			bb->AddProperty("UnityEngine::GameObject", false, "C_GameObject", "null", "ParTestAgent");
+			bb->AddProperty("ParTestAgent", false, "C_Agent", "null", "ParTestAgent");
 
 			// AgentNodeTest
 			bb = BEHAVIAC_NEW AgentProperties("AgentNodeTest");
 			AgentProperties::SetAgentTypeBlackboards("AgentNodeTest", bb);
+			bb->AddProperty("ChildNodeTest*", false, "par_child", "null", "AgentNodeTest");
 			bb->AddProperty("EnumTest", false, "testColor", "EnumTest_One", "AgentNodeTest");
 			bb->AddProperty("int", false, "testVar_0", "0", "AgentNodeTest");
 			bb->AddProperty("int", false, "testVar_1", "0", "AgentNodeTest");
 			bb->AddProperty("float", false, "testVar_2", "0", "AgentNodeTest");
 			bb->AddProperty("float", false, "testVar_3", "0", "AgentNodeTest");
+			bb->AddProperty("Act", false, "testVar_Act", "{Var_B_Loop=false;Var_List_EnumTest=0:;}", "AgentNodeTest");
 			bb->AddProperty("string", false, "testVar_str_0", "", "AgentNodeTest");
 			bb->AddProperty("int", false, "waiting_timeout_interval", "0", "AgentNodeTest");
 			bb->AddProperty("TestNS::Float2", false, "testFloat2", "{x=0;y=0;}", "AgentNodeTest");
@@ -105,6 +109,8 @@ namespace behaviac
 			bb->AddProperty("ChildNodeTest", false, "par_child_agent_1", "null", "AgentNodeTest");
 			bb->AddProperty("TestNS::Float2", false, "c_ReturnFloat2", "{x=0;y=0;}", "AgentNodeTest");
 			bb->AddProperty("TestNS::Float2", false, "c_ReturnFloat2Const", "{x=0;y=0;}", "AgentNodeTest");
+			bb->AddProperty("uint", false, "redirectCount", "0", "AgentNodeTest");
+			bb->AddProperty("uint", false, "redirectTime", "0", "AgentNodeTest");
 
 			// ChildNodeTest
 			bb = BEHAVIAC_NEW AgentProperties("ChildNodeTest");
@@ -115,13 +121,39 @@ namespace behaviac
 			bb->AddProperty("ChildNodeTest", false, "par_child_agent_1", "null", "ChildNodeTest");
 			bb->AddProperty("TestNS::Float2", false, "c_ReturnFloat2", "{x=0;y=0;}", "ChildNodeTest");
 			bb->AddProperty("TestNS::Float2", false, "c_ReturnFloat2Const", "{x=0;y=0;}", "ChildNodeTest");
+			bb->AddProperty("uint", false, "redirectCount", "0", "ChildNodeTest");
+			bb->AddProperty("uint", false, "redirectTime", "0", "ChildNodeTest");
+			bb->AddProperty("ChildNodeTest*", false, "par_child", "null", "ChildNodeTest");
 			bb->AddProperty("EnumTest", false, "testColor", "EnumTest_One", "ChildNodeTest");
 			bb->AddProperty("int", false, "testVar_0", "0", "ChildNodeTest");
 			bb->AddProperty("int", false, "testVar_1", "0", "ChildNodeTest");
 			bb->AddProperty("float", false, "testVar_2", "0", "ChildNodeTest");
 			bb->AddProperty("float", false, "testVar_3", "0", "ChildNodeTest");
+			bb->AddProperty("Act", false, "testVar_Act", "{Var_B_Loop=false;Var_List_EnumTest=0:;}", "ChildNodeTest");
 			bb->AddProperty("string", false, "testVar_str_0", "", "ChildNodeTest");
 			bb->AddProperty("int", false, "waiting_timeout_interval", "0", "ChildNodeTest");
+
+			// ChildNodeTestSub
+			bb = BEHAVIAC_NEW AgentProperties("ChildNodeTestSub");
+			AgentProperties::SetAgentTypeBlackboards("ChildNodeTestSub", bb);
+			bb->AddProperty("TestNS::Float2", false, "testFloat2", "{x=0;y=0;}", "ChildNodeTestSub");
+			bb->AddProperty("int", false, "testInt", "10", "ChildNodeTestSub");
+			bb->AddProperty("vector<int>", false, "test_int_array", "3:1|2|3", "ChildNodeTestSub");
+			bb->AddProperty("ChildNodeTest", false, "par_child_agent_1", "null", "ChildNodeTestSub");
+			bb->AddProperty("TestNS::Float2", false, "c_ReturnFloat2", "{x=0;y=0;}", "ChildNodeTestSub");
+			bb->AddProperty("TestNS::Float2", false, "c_ReturnFloat2Const", "{x=0;y=0;}", "ChildNodeTestSub");
+			bb->AddProperty("uint", false, "redirectCount", "0", "ChildNodeTestSub");
+			bb->AddProperty("uint", false, "redirectTime", "0", "ChildNodeTestSub");
+			bb->AddProperty("int", false, "IntValue", "0", "ChildNodeTestSub");
+			bb->AddProperty("ChildNodeTest*", false, "par_child", "null", "ChildNodeTestSub");
+			bb->AddProperty("EnumTest", false, "testColor", "EnumTest_One", "ChildNodeTestSub");
+			bb->AddProperty("int", false, "testVar_0", "0", "ChildNodeTestSub");
+			bb->AddProperty("int", false, "testVar_1", "0", "ChildNodeTestSub");
+			bb->AddProperty("float", false, "testVar_2", "0", "ChildNodeTestSub");
+			bb->AddProperty("float", false, "testVar_3", "0", "ChildNodeTestSub");
+			bb->AddProperty("Act", false, "testVar_Act", "{Var_B_Loop=false;Var_List_EnumTest=0:;}", "ChildNodeTestSub");
+			bb->AddProperty("string", false, "testVar_str_0", "", "ChildNodeTestSub");
+			bb->AddProperty("int", false, "waiting_timeout_interval", "0", "ChildNodeTestSub");
 
 			// CustomPropertyAgent
 			bb = BEHAVIAC_NEW AgentProperties("CustomPropertyAgent");
@@ -137,13 +169,17 @@ namespace behaviac
 			bb->AddProperty("string", true, "c_StaticString", "", "CustomPropertyAgent");
 			bb->AddProperty("TNS::NE::NAT::eColor", false, "c_Enum", "RED", "CustomPropertyAgent");
 			bb->AddProperty("UnityEngine::Vector3", false, "c_Location", "{x=0;y=0;z=0;}", "CustomPropertyAgent");
+			bb->AddProperty("TestNamespace::ClassAsValueType", false, "TestMember1", "{x=0;y=0;}", "CustomPropertyAgent");
+			bb->AddProperty("TestNamespace::Float2", false, "TestMember2", "{x=0;y=0;}", "CustomPropertyAgent");
 
 			// EmployeeParTestAgent
 			bb = BEHAVIAC_NEW AgentProperties("EmployeeParTestAgent");
 			AgentProperties::SetAgentTypeBlackboards("EmployeeParTestAgent", bb);
+			bb->AddProperty("UnityEngine::GameObject", false, "C_GameObject", "null", "EmployeeParTestAgent");
+			bb->AddProperty("ParTestAgent", false, "C_Agent", "null", "EmployeeParTestAgent");
 			bb->AddProperty("behaviac::Agent*", true, "STV_AGENT_0", "null", "EmployeeParTestAgent");
 			bb->AddProperty("float", true, "STV_F_0", "0", "EmployeeParTestAgent");
-			bb->AddProperty("behaviac::vector<behaviac::Agent*>", true, "STV_LIST_AGENT_0", "0:", "EmployeeParTestAgent");
+			bb->AddProperty("vector<behaviac::Agent*>", true, "STV_LIST_AGENT_0", "0:", "EmployeeParTestAgent");
 			bb->AddProperty("vector<float>", true, "STV_LIST_F_0", "0:", "EmployeeParTestAgent");
 			bb->AddProperty("vector<string>", true, "STV_LIST_STR_0", "0:", "EmployeeParTestAgent");
 			bb->AddProperty("string", true, "STV_STR_0", "", "EmployeeParTestAgent");
@@ -151,7 +187,7 @@ namespace behaviac
 			bb->AddProperty("cszstring", false, "TV_CSZSTR_0", "", "EmployeeParTestAgent");
 			bb->AddProperty("double", false, "TV_D_0", "0", "EmployeeParTestAgent");
 			bb->AddProperty("float", false, "TV_F_0", "0", "EmployeeParTestAgent");
-			bb->AddProperty("behaviac::vector<behaviac::Agent*>", false, "TV_LIST_AGENT_0", "0:", "EmployeeParTestAgent");
+			bb->AddProperty("vector<behaviac::Agent*>", false, "TV_LIST_AGENT_0", "0:", "EmployeeParTestAgent");
 			bb->AddProperty("vector<float>", false, "TV_LIST_F_0", "0:", "EmployeeParTestAgent");
 			bb->AddProperty("vector<string>", false, "TV_LIST_STR_0", "0:", "EmployeeParTestAgent");
 			bb->AddProperty("llong", false, "TV_LL_0", "0", "EmployeeParTestAgent");
@@ -163,11 +199,11 @@ namespace behaviac
 			bb->AddProperty("int", true, "STV_INT_0", "0", "EmployeeParTestAgent");
 			bb->AddProperty("TNS::ST::PER::WRK::kEmployee", true, "STV_KEMPLOYEE_0", "{boss=null;car={brand=\"\";color=RED;price=0;};code=A;id=0;isMale=false;name=\"\";skinColor=RED;weight=0;}", "EmployeeParTestAgent");
 			bb->AddProperty("vector<int>", true, "STV_LIST_INT_0", "0:", "EmployeeParTestAgent");
-			bb->AddProperty("behaviac::vector<TNS::ST::PER::WRK::kEmployee>", true, "STV_LIST_KEMPLOYEE_0", "0:", "EmployeeParTestAgent");
+			bb->AddProperty("vector<TNS::ST::PER::WRK::kEmployee>", true, "STV_LIST_KEMPLOYEE_0", "0:", "EmployeeParTestAgent");
 			bb->AddProperty("int", false, "TV_INT_0", "0", "EmployeeParTestAgent");
 			bb->AddProperty("TNS::ST::PER::WRK::kEmployee", false, "TV_KEMPLOYEE_0", "{boss=null;car={brand=\"\";color=RED;price=0;};code=A;id=0;isMale=false;name=\"\";skinColor=RED;weight=0;}", "EmployeeParTestAgent");
 			bb->AddProperty("vector<int>", false, "TV_LIST_INT_0", "0:", "EmployeeParTestAgent");
-			bb->AddProperty("behaviac::vector<TNS::ST::PER::WRK::kEmployee>", false, "TV_LIST_KEMPLOYEE_0", "0:", "EmployeeParTestAgent");
+			bb->AddProperty("vector<TNS::ST::PER::WRK::kEmployee>", false, "TV_LIST_KEMPLOYEE_0", "0:", "EmployeeParTestAgent");
 			bb->AddProperty("long", false, "TV_LONG_0", "0", "EmployeeParTestAgent");
 			bb->AddProperty("short", false, "TV_SHORT_0", "0", "EmployeeParTestAgent");
 			bb->AddProperty("ushort", false, "TV_USHORT_0", "0", "EmployeeParTestAgent");
@@ -177,7 +213,7 @@ namespace behaviac
 			bb->AddProperty("vector<bool>", true, "STV_LIST_BOOL_0", "0:", "EmployeeParTestAgent");
 			bb->AddProperty("vector<char>", true, "STV_LIST_CHAR_0", "0:", "EmployeeParTestAgent");
 			bb->AddProperty("vector<TNS::NE::NAT::eColor>", true, "STV_LIST_ECOLOR_0", "0:", "EmployeeParTestAgent");
-			bb->AddProperty("vector<subyte>", true, "STV_LIST_SBYTE_0", "0:", "EmployeeParTestAgent");
+			bb->AddProperty("vector<sbyte>", true, "STV_LIST_SBYTE_0", "0:", "EmployeeParTestAgent");
 			bb->AddProperty("bool", false, "TV_BOOL_0", "false", "EmployeeParTestAgent");
 			bb->AddProperty("ubyte", false, "TV_BYTE_0", "0", "EmployeeParTestAgent");
 			bb->AddProperty("char", false, "TV_CHAR_0", "", "EmployeeParTestAgent");
@@ -186,8 +222,8 @@ namespace behaviac
 			bb->AddProperty("vector<ubyte>", false, "TV_LIST_BYTE_0", "0:", "EmployeeParTestAgent");
 			bb->AddProperty("vector<char>", false, "TV_LIST_CHAR_0", "0:", "EmployeeParTestAgent");
 			bb->AddProperty("vector<TNS::NE::NAT::eColor>", false, "TV_LIST_ECOLOR_0", "0:", "EmployeeParTestAgent");
-			bb->AddProperty("vector<subyte>", false, "TV_LIST_SBYTE_0", "0:", "EmployeeParTestAgent");
-			bb->AddProperty("subyte", false, "TV_SBYTE_0", "0", "EmployeeParTestAgent");
+			bb->AddProperty("vector<sbyte>", false, "TV_LIST_SBYTE_0", "0:", "EmployeeParTestAgent");
+			bb->AddProperty("sbyte", false, "TV_SBYTE_0", "0", "EmployeeParTestAgent");
 			bb->AddProperty("ParTestAgent", false, "target", "null", "EmployeeParTestAgent");
 
 			// FSMAgentTest
@@ -217,14 +253,14 @@ namespace behaviac
 			bb = BEHAVIAC_NEW AgentProperties("ParTestRegNameAgent");
 			AgentProperties::SetAgentTypeBlackboards("ParTestRegNameAgent", bb);
 			bb->AddProperty("TNS::ST::PER::WRK::kEmployee", true, "STV_KEMPLOYEE_0", "{boss=null;car={brand=\"\";color=RED;price=0;};code=A;id=0;isMale=false;name=\"\";skinColor=RED;weight=0;}", "ParTestRegNameAgent");
-			bb->AddProperty("behaviac::vector<TNS::ST::PER::WRK::kEmployee>", true, "STV_LIST_KEMPLOYEE_0", "0:", "ParTestRegNameAgent");
-			bb->AddProperty("vector<subyte>", true, "STV_LIST_SBYTE_0", "0:", "ParTestRegNameAgent");
+			bb->AddProperty("vector<TNS::ST::PER::WRK::kEmployee>", true, "STV_LIST_KEMPLOYEE_0", "0:", "ParTestRegNameAgent");
+			bb->AddProperty("vector<sbyte>", true, "STV_LIST_SBYTE_0", "0:", "ParTestRegNameAgent");
 			bb->AddProperty("behaviac::Agent*", false, "TV_AGENT_0", "null", "ParTestRegNameAgent");
 			bb->AddProperty("ubyte", false, "TV_BYTE_0", "0", "ParTestRegNameAgent");
 			bb->AddProperty("char", false, "TV_CHAR_0", "", "ParTestRegNameAgent");
 			bb->AddProperty("TNS::ST::PER::WRK::kEmployee", false, "TV_KEMPLOYEE_0", "{boss=null;car={brand=\"\";color=RED;price=0;};code=A;id=0;isMale=false;name=\"\";skinColor=RED;weight=0;}", "ParTestRegNameAgent");
-			bb->AddProperty("behaviac::vector<TNS::ST::PER::WRK::kEmployee>", false, "TV_LIST_KEMPLOYEE_0", "0:", "ParTestRegNameAgent");
-			bb->AddProperty("subyte", false, "TV_SBYTE_0", "0", "ParTestRegNameAgent");
+			bb->AddProperty("vector<TNS::ST::PER::WRK::kEmployee>", false, "TV_LIST_KEMPLOYEE_0", "0:", "ParTestRegNameAgent");
+			bb->AddProperty("sbyte", false, "TV_SBYTE_0", "0", "ParTestRegNameAgent");
 			bb->AddProperty("string", false, "TV_STR_0", "", "ParTestRegNameAgent");
 
 			// PreconEffectorAgent
@@ -260,6 +296,9 @@ namespace behaviac
 			bb->AddProperty("int", false, "c_Int", "0", "TestNS::AgentArrayAccessTest");
 			bb->AddProperty("vector<int>", false, "c_ListInts", "5:10|20|30|40|50", "TestNS::AgentArrayAccessTest");
 			bb->AddProperty("int", false, "c_Count", "0", "TestNS::AgentArrayAccessTest");
+			bb->AddProperty("vector<double>", false, "c_douleVec", "3:0.01|0.02|0.03", "TestNS::AgentArrayAccessTest");
+			bb->AddProperty("double", false, "c_doubleVal", "0.05", "TestNS::AgentArrayAccessTest");
+			bb->AddProperty("vector<double>", false, "c_doubleVec2", "3:0.01|0.02|0.03", "TestNS::AgentArrayAccessTest");
 
 			// ---------------------------------------------------------------------
 			// tasks
@@ -302,6 +341,14 @@ namespace behaviac
 			customeMethod->AddParamType("AgentNodeTest");
 			objectDesc->ms_methods.push_back(customeMethod);
 
+			customeMethod = BEHAVIAC_NEW CTaskMethod("AgentNodeTest", "event_test_float2");
+			customeMethod->AddParamType("TestNS::Float2");
+			objectDesc->ms_methods.push_back(customeMethod);
+
+			customeMethod = BEHAVIAC_NEW CTaskMethod("AgentNodeTest", "event_test_float2_ref");
+			customeMethod->AddParamType("TestNS::Float2&");
+			objectDesc->ms_methods.push_back(customeMethod);
+
 			// ChildNodeTest
 			objectDesc = (CTagObjectDescriptor*)Agent::GetDescriptorByName("ChildNodeTest");
 			customeMethod = BEHAVIAC_NEW CTaskMethod("ChildNodeTest", "root");
@@ -332,6 +379,54 @@ namespace behaviac
 
 			customeMethod = BEHAVIAC_NEW CTaskMethod("ChildNodeTest", "event_test_agent");
 			customeMethod->AddParamType("AgentNodeTest");
+			objectDesc->ms_methods.push_back(customeMethod);
+
+			customeMethod = BEHAVIAC_NEW CTaskMethod("ChildNodeTest", "event_test_float2");
+			customeMethod->AddParamType("TestNS::Float2");
+			objectDesc->ms_methods.push_back(customeMethod);
+
+			customeMethod = BEHAVIAC_NEW CTaskMethod("ChildNodeTest", "event_test_float2_ref");
+			customeMethod->AddParamType("TestNS::Float2&");
+			objectDesc->ms_methods.push_back(customeMethod);
+
+			// ChildNodeTestSub
+			objectDesc = (CTagObjectDescriptor*)Agent::GetDescriptorByName("ChildNodeTestSub");
+			customeMethod = BEHAVIAC_NEW CTaskMethod("ChildNodeTestSub", "root");
+			objectDesc->ms_methods.push_back(customeMethod);
+
+			customeMethod = BEHAVIAC_NEW CTaskMethod("ChildNodeTestSub", "event_test_int");
+			customeMethod->AddParamType("int");
+			objectDesc->ms_methods.push_back(customeMethod);
+
+			customeMethod = BEHAVIAC_NEW CTaskMethod("ChildNodeTestSub", "event_test_int_bool");
+			customeMethod->AddParamType("int");
+			customeMethod->AddParamType("bool");
+			objectDesc->ms_methods.push_back(customeMethod);
+
+			customeMethod = BEHAVIAC_NEW CTaskMethod("ChildNodeTestSub", "event_test_int_bool_float");
+			customeMethod->AddParamType("int");
+			customeMethod->AddParamType("bool");
+			customeMethod->AddParamType("float");
+			objectDesc->ms_methods.push_back(customeMethod);
+
+			customeMethod = BEHAVIAC_NEW CTaskMethod("ChildNodeTestSub", "event_test_void");
+			objectDesc->ms_methods.push_back(customeMethod);
+
+			customeMethod = BEHAVIAC_NEW CTaskMethod("ChildNodeTestSub", "task_test");
+			customeMethod->AddParamType("int");
+			customeMethod->AddParamType("float");
+			objectDesc->ms_methods.push_back(customeMethod);
+
+			customeMethod = BEHAVIAC_NEW CTaskMethod("ChildNodeTestSub", "event_test_agent");
+			customeMethod->AddParamType("AgentNodeTest");
+			objectDesc->ms_methods.push_back(customeMethod);
+
+			customeMethod = BEHAVIAC_NEW CTaskMethod("ChildNodeTestSub", "event_test_float2");
+			customeMethod->AddParamType("TestNS::Float2");
+			objectDesc->ms_methods.push_back(customeMethod);
+
+			customeMethod = BEHAVIAC_NEW CTaskMethod("ChildNodeTestSub", "event_test_float2_ref");
+			customeMethod->AddParamType("TestNS::Float2&");
 			objectDesc->ms_methods.push_back(customeMethod);
 
 			// HTNAgentHouse

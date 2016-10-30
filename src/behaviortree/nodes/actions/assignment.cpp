@@ -22,7 +22,7 @@
 
 namespace behaviac
 {
-    Assignment::Assignment() : m_opl(0), m_opr(0), m_opr_m(0)
+	Assignment::Assignment() : m_opl(0), m_opr(0), m_opr_m(0), m_bCast(false)
     {
     }
 
@@ -31,7 +31,7 @@ namespace behaviac
         BEHAVIAC_DELETE(m_opr_m);
     }
 
-    //CMethodBase* LoadMethod(const char* value);
+    //behaviac::CMethodBase* LoadMethod(const char* value);
     //Property* LoadLeft(const char* value, behaviac::string& propertyName, const char* constValue);
     //Property* LoadRight(const char* value, const behaviac::string& propertyName, behaviac::string& typeName);
     /**
@@ -48,12 +48,15 @@ namespace behaviac
         {
             const property_t& p = (*it);
 
-            if (strcmp(p.name, "Opl") == 0)
+			if (StringUtils::StrEqual(p.name, "CastRight"))
+			{
+				this->m_bCast = StringUtils::StrEqualNoCase(p.value, "true");
+			}
+			else if (StringUtils::StrEqual(p.name, "Opl"))
             {
-                this->m_opl = Condition::LoadLeft(p.value);
-
+				this->m_opl = Condition::LoadLeft(p.value, propertyName);
             }
-            else if (strcmp(p.name, "Opr") == 0)
+			else if (StringUtils::StrEqual(p.name, "Opr"))
             {
                 const char* pParenthesis = strchr(p.value, '(');
 
@@ -74,7 +77,7 @@ namespace behaviac
             }
         }
     }
-    bool Assignment::EvaluteAssignment(const Agent* pAgent, Property* opl, Property* opr, CMethodBase* opr_m)
+    bool Assignment::EvaluteAssignment(bool bCast, const Agent* pAgent, Property* opl, Property* opr, behaviac::CMethodBase* opr_m)
     {
         bool bValid = false;
 
@@ -84,7 +87,7 @@ namespace behaviac
 			{
 				Agent* pParentL = (Agent*)opl->GetParentAgent(pAgent);
 
-				opl->SetFrom((Agent*)pAgent, opr_m, pParentL);
+				opl->SetFrom((Agent*)pAgent, opr_m, pParentL, bCast);
 
 				bValid = true;
 			}
@@ -93,7 +96,7 @@ namespace behaviac
 				Agent* pParentL = opl->GetParentAgent(pAgent);
 				Agent* pParentR = opr->GetParentAgent(pAgent);
 
-				opl->SetFrom(pParentR, opr, pParentL);
+				opl->SetFrom(pParentR, opr, pParentL, bCast);
 
 				bValid = true;
 			}
@@ -162,7 +165,7 @@ namespace behaviac
         Assignment* pAssignmentNode = (Assignment*)(this->GetNode());
 
         EBTStatus result = BT_SUCCESS;
-        bool bValid = Assignment::EvaluteAssignment(pAgent, pAssignmentNode->m_opl, pAssignmentNode->m_opr, pAssignmentNode->m_opr_m);
+		bool bValid = Assignment::EvaluteAssignment(pAssignmentNode->m_bCast, pAgent, pAssignmentNode->m_opl, pAssignmentNode->m_opr, pAssignmentNode->m_opr_m);
 
         if (!bValid)
         {

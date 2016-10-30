@@ -1,3 +1,14 @@
+//
+// Licensed under the BSD 3-Clause License (the "License"); you may not use this file except in compliance with
+// the License. You may obtain a copy of the License at http://opensource.org/licenses/BSD-3-Clause
+//
+// Unless required by applicable law or agreed to in writing, software distributed under the License is
+// distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and limitations under the License.
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#if !BEHAVIAC_CS_ONLY
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -111,8 +122,10 @@ namespace BehaviorNodeUnitTest
             Assert.AreEqual(0.0, testAgent2.Location.y, 0.001f);
             Assert.AreEqual(0.0, testAgent2.Location.z, 0.001f);
 
-            object c_Location20 = testAgent2.GetVariable<object>("c_Location");
-            Assert.AreEqual(null, c_Location20);
+            Vector3 c_Location20 = testAgent2.GetVariable<Vector3>("c_Location");
+            Assert.AreEqual(0.0, c_Location20.x, 0.001f);
+            Assert.AreEqual(0.0, c_Location20.y, 0.001f);
+            Assert.AreEqual(0.0, c_Location20.z, 0.001f);
 
             testAgent2.btexec();
 
@@ -149,8 +162,7 @@ namespace BehaviorNodeUnitTest
             Assert.AreEqual(TNS.NE.NAT.eColor.GREEN, color);
 
             //l_Int defined as local in custom_property_as_left_value_and_param, not defined in local_out_scope
-            object l_Int = testAgent.GetVariable<object>("l_Int");
-            Assert.AreEqual(null, l_Int);
+            Assert.AreEqual(false, testAgent.IsValidVariable("l_Int"));
 
             List<int> l_IntArray = testAgent.GetVariable<List<int>>("l_IntArray") ;
             Assert.AreEqual(2, l_IntArray.Count);
@@ -161,8 +173,9 @@ namespace BehaviorNodeUnitTest
 
             //bt succeeded, so the l_IntArray is out of scope
             Assert.AreEqual(behaviac.EBTStatus.BT_SUCCESS, status);
-            l_IntArray = testAgent.GetVariable<List<int>>("l_IntArray");
-            Assert.AreEqual(null, l_IntArray);
+            Assert.AreEqual(false, testAgent.IsValidVariable("l_IntArray"));
         }
     }
 }
+
+#endif

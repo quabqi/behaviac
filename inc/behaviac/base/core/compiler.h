@@ -120,7 +120,8 @@
 
 #if BEHAVIAC_COMPILER_MSVC
 /// Define the force inline compiler indicator
-#define BEHAVIAC_FORCEINLINE __forceinline
+//#define BEHAVIAC_FORCEINLINE __forceinline
+#define BEHAVIAC_FORCEINLINE __inline
 #define BEHAVIAC_FORCENOINLINE _declspec(noinline)
 
 #if _MSC_VER >= 1400
@@ -158,8 +159,8 @@
 #define BEHAVIAC_ALIGN_SUFFIX(alignment)				__attribute__ ((aligned(n)))
 
 #ifdef BEHAVIAC_DLL
-#	define BEHAVIAC_DLL_ENTRY_IMPORT					__attribute__ ((dllimport))
-#	define BEHAVIAC_DLL_ENTRY_EXPORT					__attribute__ ((dllexport))
+#	define BEHAVIAC_DLL_ENTRY_IMPORT					
+#	define BEHAVIAC_DLL_ENTRY_EXPORT					__attribute__((visibility("default")))
 #else
 #	define BEHAVIAC_DLL_ENTRY_IMPORT
 #	define BEHAVIAC_DLL_ENTRY_EXPORT
@@ -179,8 +180,8 @@
 #define BEHAVIAC_ALIGN_SUFFIX(alignment)				__attribute__ ((aligned(n)))
 
 #ifdef BEHAVIAC_DLL
-#	define BEHAVIAC_DLL_ENTRY_IMPORT					__attribute__ ((dllimport))
-#	define BEHAVIAC_DLL_ENTRY_EXPORT					__attribute__ ((dllexport))
+#	define BEHAVIAC_DLL_ENTRY_IMPORT					
+#	define BEHAVIAC_DLL_ENTRY_EXPORT					__attribute__((visibility("default")))
 #else
 #	define BEHAVIAC_DLL_ENTRY_IMPORT
 #	define BEHAVIAC_DLL_ENTRY_EXPORT
@@ -254,7 +255,7 @@
 #define string_snprintf _snprintf
 #define string_vnprintf vsnprintf
 #define string_vnwprintf _vsnwprintf_s
-#define string_sprintf(s, fmt, ...) BEHAVIAC_ASSERT(BEHAVIAC_ARRAY_LENGTH(s) > 0); _snprintf(s, BEHAVIAC_ARRAY_LENGTH(s), fmt, __VA_ARGS__); s[BEHAVIAC_ARRAY_LENGTH(s) - 1] = '\0'
+#define string_sprintf(s, fmt, ...) BEHAVIAC_ASSERT(BEHAVIAC_ARRAY_LENGTH(s) > 0); _snprintf(s, BEHAVIAC_ARRAY_LENGTH(s), fmt, __VA_ARGS__); s[BEHAVIAC_ARRAY_LENGTH(s) - 1] = '\0';
 #elif BEHAVIAC_COMPILER_APPLE || BEHAVIAC_COMPILER_ANDROID || BEHAVIAC_COMPILER_GCC_LINUX || BEHAVIAC_COMPILER_GCC_CYGWIN
 #define string_cpy strcpy
 #define string_ncpy strncpy

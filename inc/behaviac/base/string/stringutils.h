@@ -474,7 +474,7 @@ namespace behaviac
 
             if (end)
             {
-                int length = (end - params);
+                int length = (int)(end - params);
                 token = behaviac::string(params, length);
                 return end;
             }
@@ -496,7 +496,7 @@ namespace behaviac
 
                 if (end2)
                 {
-                    int length = (end2 - end);
+					int length = (int)(end2 - end);
                     token = behaviac::string(end, length);
                     return end2;
 
@@ -1019,6 +1019,12 @@ namespace behaviac
 
             return 0 == strncmp(str + str_len - suffix_len, suffix, suffix_len);
         }
+
+		inline const char* StrFind(const char* str1, const char sep)
+		{
+			return strchr(str1, sep);
+		}
+
 
         inline bool StrEqual(const char* str1, const char* str2)
         {

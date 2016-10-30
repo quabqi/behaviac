@@ -26,7 +26,10 @@ namespace PluginBehaviac.DataExporters
         {
             typeName = DataCsExporter.GetExportNativeType(typeName);
 
-            typeName = typeName.Replace("byte", "ubyte");
+            if (!typeName.Contains("sbyte"))
+            {
+                typeName = typeName.Replace("byte", "ubyte");
+            }
 
             return typeName;
         }
@@ -66,6 +69,8 @@ namespace PluginBehaviac.DataExporters
 
             if (typeName.Contains("std::string"))
                 typeName = typeName.Replace("std::string", "behaviac::string");
+            else if (typeName.Contains("string") && !typeName.Contains("::string"))
+                typeName = typeName.Replace("string", "behaviac::string");
 
             return typeName;
         }

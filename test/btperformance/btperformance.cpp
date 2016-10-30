@@ -186,21 +186,21 @@ behaviac::EBTStatus CPerformanceAgent::Fidget()
 }
 #pragma  optimize("", on)
 
-BEGIN_PROPERTIES_DESCRIPTION(CPerformanceAgent)
+BEHAVIAC_BEGIN_PROPERTIES(CPerformanceAgent)
 {
-	REGISTER_PROPERTY(DistanceToEnemy);
-	REGISTER_PROPERTY(HP);
-	REGISTER_PROPERTY(Hungry);
-	REGISTER_PROPERTY(Food);
+	BEHAVIAC_REGISTER_PROPERTY(DistanceToEnemy);
+	BEHAVIAC_REGISTER_PROPERTY(HP);
+	BEHAVIAC_REGISTER_PROPERTY(Hungry);
+	BEHAVIAC_REGISTER_PROPERTY(Food);
 
-	REGISTER_METHOD(RunAway);
-	REGISTER_METHOD(Fire);
-	REGISTER_METHOD(SearchForFood);
-	REGISTER_METHOD(Eat);
-	REGISTER_METHOD(Wander);
-	REGISTER_METHOD(Fidget);
+	BEHAVIAC_REGISTER_METHOD(RunAway);
+	BEHAVIAC_REGISTER_METHOD(Fire);
+	BEHAVIAC_REGISTER_METHOD(SearchForFood);
+	BEHAVIAC_REGISTER_METHOD(Eat);
+	BEHAVIAC_REGISTER_METHOD(Wander);
+	BEHAVIAC_REGISTER_METHOD(Fidget);
 }
-END_PROPERTIES_DESCRIPTION()
+BEHAVIAC_END_PROPERTIES()
 
 #include "behaviac_generated/behaviors/generated_behaviors.h"
 
@@ -295,10 +295,10 @@ int main(int argc, char** argv)
         format = behaviac::Workspace::EFF_bson;
     }
 
-    CConfig::GetInstance()->LoadConfig("setting.xml");
+    behaviac::CConfig::GetInstance()->LoadConfig("setting.xml");
 
     if (!bWait) {
-        const char* pWait = CConfig::Get("settings", "Wait");
+		const char* pWait = behaviac::CConfig::Get("settings", "Wait");
 
         if (pWait && strcmp(pWait, "1") == 0) {
             bWait = true;

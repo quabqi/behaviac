@@ -199,7 +199,7 @@ namespace Behaviac.Design.Attributes
                 //to set it as action.Method is used in the following parsing
                 Nodes.Action action = node as Nodes.Action;
 
-                if (action != null)
+                if (action != null && action.Method == null)
                 {
                     action.Method = method;
                 }
@@ -226,7 +226,9 @@ namespace Behaviac.Design.Attributes
             }
             else
             {
-                bOk = Plugin.InvokeTypeParser(result, par.Type, param, (object value) => par.Value = value, node, par.Name);
+                bOk = Plugin.InvokeTypeParser(result, par.Type, param, 
+                    (object value) => par.Value = value, 
+                    node, par.Name);
             }
 
             return bOk;

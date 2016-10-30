@@ -23,7 +23,6 @@ using System.IO;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
-using UnityEngine;
 
 #if !BEHAVIAC_RELEASE || BEHAVIAC_USE_SYSTEM_XML
 
@@ -50,10 +49,27 @@ namespace behaviac
 
     public static class Config
     {
-        readonly private static bool m_bIsDesktopPlayer = (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.OSXPlayer);
-        readonly private static bool m_bIsDesktopEditor = (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.OSXPlayer);
+#if !BEHAVIAC_CS_ONLY
+        readonly private static bool m_bIsDesktopPlayer = (UnityEngine.Application.platform == UnityEngine.RuntimePlatform.WindowsPlayer || UnityEngine.Application.platform == UnityEngine.RuntimePlatform.OSXPlayer);
+        readonly private static bool m_bIsDesktopEditor = (UnityEngine.Application.platform == UnityEngine.RuntimePlatform.WindowsEditor || UnityEngine.Application.platform == UnityEngine.RuntimePlatform.OSXPlayer);
+#else
+        readonly private static bool m_bIsDesktopPlayer = false;
+        readonly private static bool m_bIsDesktopEditor = false;
+#endif
 
         private static bool m_bProfiling = false;
+
+        public static void LogInfo()
+        {
+            Debug.Log(string.Format("Config::IsDesktopPlayer {0}", Config.IsDesktopPlayer ? "true" : "false"));
+            Debug.Log(string.Format("Config::IsProfiling {0}", Config.IsProfiling ? "true" : "false"));
+            Debug.Log(string.Format("Config::IsLogging {0}", Config.IsLogging ? "true" : "false"));
+            Debug.Log(string.Format("Config::IsLoggingFlush {0}", Config.IsLoggingFlush ? "true" : "false"));
+            Debug.Log(string.Format("Config::IsSocketing {0}", Config.IsSocketing ? "true" : "false"));
+            Debug.Log(string.Format("Config::IsSocketBlocking {0}", Config.IsSocketBlocking ? "true" : "false"));
+            Debug.Log(string.Format("Config::IsHotReload {0}", Config.IsHotReload ? "true" : "false"));
+            Debug.Log(string.Format("Config::SocketPort {0}", Config.SocketPort));
+        }
 
         public static bool IsProfiling
         {
@@ -321,32 +337,39 @@ namespace behaviac
 
         private static string GetDefaultExportPath()
         {
-            string relativePath = "/Resources/behaviac/exported";
             string path = "";
 
-            if (Application.platform == RuntimePlatform.WindowsEditor)
+#if !BEHAVIAC_CS_ONLY
+            string relativePath = "/Resources/behaviac/exported";
+            if (UnityEngine.Application.platform == UnityEngine.RuntimePlatform.WindowsEditor)
             {
-                path = Application.dataPath + relativePath;
+                path = UnityEngine.Application.dataPath + relativePath;
             }
-            else if (Application.platform == RuntimePlatform.WindowsPlayer)
+            else if (UnityEngine.Application.platform == UnityEngine.RuntimePlatform.WindowsPlayer)
             {
-                path = Application.dataPath + relativePath;
+                path = UnityEngine.Application.dataPath + relativePath;
             }
             else
             {
                 path = "Assets" + relativePath;
             }
+#endif
 
             return path;
         }
 
-        private string m_workspaceExportPath = GetDefaultExportPath();
+        private string m_workspaceExportPath = null;
 
         //read from 'WorkspaceFile', prepending with 'WorkspacePath', relative to the exe's path
         public string FilePath
         {
             get
             {
+                if (string.IsNullOrEmpty(m_workspaceExportPath))
+                {
+                    m_workspaceExportPath = GetDefaultExportPath();
+                }
+
                 return this.m_workspaceExportPath;
             }
             set
@@ -364,8 +387,13 @@ namespace behaviac
         {
             get
             {
-                return (m_frameSinceStartup < 0) ? Time.frameCount : m_frameSinceStartup;
+#if !BEHAVIAC_CS_ONLY
+                return (m_frameSinceStartup < 0) ? UnityEngine.Time.frameCount : m_frameSinceStartup;
+#else
+                return m_frameSinceStartup;
+#endif
             }
+
             set
             {
                 m_frameSinceStartup = value;
@@ -381,13 +409,18 @@ namespace behaviac
         {
             get
             {
+#if !BEHAVIAC_CS_ONLY
                 if (this.m_timeSinceStartup >= 0.0)
                 {
                     return this.m_timeSinceStartup;
                 }
 
-                return Time.realtimeSinceStartup;
+                return UnityEngine.Time.realtimeSinceStartup;
+#else
+                return this.m_timeSinceStartup;
+#endif
             }
+
             set
             {
                 this.m_timeSinceStartup = value;
@@ -464,22 +497,22 @@ namespace behaviac
         private bool m_bInited = false;
         internal bool IsInited
         {
-            get
-            {
-                return m_bInited;
-            }
+            get { return m_bInited; }
         }
 
-        private bool TryInit()
+        public bool TryInit()
         {
             if (this.m_bInited)
-            {
                 return true;
-            }
 
             this.m_bInited = true;
 
-            this.RegisterStuff();           
+            ComparerRegister.Init();
+            ComputerRegister.Init();
+
+            Workspace.Instance.RegisterStuff();
+
+            Config.LogInfo();
 
             if (string.IsNullOrEmpty(this.FilePath))
             {
@@ -496,7 +529,11 @@ namespace behaviac
             m_frameSinceStartup = -1;
 
 #if !BEHAVIAC_RELEASE
-            this.m_workspaceExportPathAbs = Path.GetFullPath(this.FilePath);
+            this.m_workspaceExportPathAbs = Path.GetFullPath(this.FilePath).Replace('\\', '/');
+            if (!this.m_workspaceExportPathAbs.EndsWith("/"))
+            {
+                this.m_workspaceExportPathAbs += '/';
+            }
 
 #if BEHAVIAC_HOTRELOAD
             // set the file watcher
@@ -550,6 +587,9 @@ namespace behaviac
 
             Debug.Check(this.m_bRegistered);
 
+            ComparerRegister.Cleanup();
+            ComputerRegister.Cleanup();
+
             this.UnRegisterStuff();
 
             Context.Cleanup(-1);
@@ -568,43 +608,27 @@ namespace behaviac
             }
 #endif
 
+#if BEHAVIAC_USE_HTN
             PlannerTask.Cleanup();
+#endif//
 
             LogManager.Instance.Close();
 
             this.m_bInited = false;
         }
 
-        private void RegisterStuff()
+        internal void RegisterStuff()
         {
             //only register metas and others at the 1st time
             if (!this.m_bRegistered)
             {
                 this.m_bRegistered = true;
 
-                behaviac.Details.RegisterCompareValue();
-                behaviac.Details.RegisterComputeValue();
+                AgentMeta.Register();
 
-                AgentProperties.RegisterTypes();
-
-                if (!AgentProperties.GeneratedRegisterationTypes)
-                {
-                    this.RegisterMetas();
-                }
-                else
-                {
-                    for (int i = 0; i < m_agentTypes.Count; ++i)
-                    {
-                        TypeInfo_t typeInfo = m_agentTypes[i];
-                        RegisterType(typeInfo.type, true);
-                    }
-
-                    m_metaRegistered = true;
-                }
-
-                IVariable.RegisterBasicTypes();
-
-                AgentProperties.Load();
+#if !BEHAVIAC_RELEASE
+                this.RegisterMetas();
+#endif
             }
         }
 
@@ -613,13 +637,11 @@ namespace behaviac
             Debug.Check(this.m_bRegistered);
 
             this.UnRegisterBehaviorNode();
+#if !BEHAVIAC_RELEASE
             this.UnRegisterMetas();
+#endif
 
-            IVariable.UnRegisterBasicTypes();
-            AgentProperties.UnRegisterTypes();
-
-            behaviac.Details.Cleanup();
-            AgentProperties.Cleanup();
+            AgentMeta.UnRegister();
 
             this.m_bRegistered = false;
         }
@@ -1429,8 +1451,6 @@ namespace behaviac
             m_allBehaviorTreeTasks.Clear();
             BehaviorTrees.Clear();
             BTCreators.Clear();
-
-            AgentProperties.UnloadLocals();
         }
 
         public byte[] ReadFileToBuffer(string file, string ext)
@@ -1471,12 +1491,7 @@ namespace behaviac
             Debug.Check(string.IsNullOrEmpty(StringUtils.FindExtension(relativePath)), "no extention to specify");
             Debug.Check(this.IsValidPath(relativePath));
 
-            bool bOk = this.TryInit();
-            if (!bOk)
-            {
-                //not init correctly
-                return false;
-            }
+            TryInit();
 
             BehaviorTree pBT = null;
 
@@ -1792,8 +1807,6 @@ namespace behaviac
 
         #endregion Load
 
-        #region ExportMeta
-
         private Dictionary<string, Type> m_behaviorNodeTypes = new Dictionary<string, Type>();
 
         private void UnRegisterBehaviorNode()
@@ -1836,6 +1849,8 @@ namespace behaviac
             return null;
         }
 
+        #region ExportMeta
+#if !BEHAVIAC_RELEASE
         private string GetFullTypeName(Type type, bool isValue = false)
         {
             string baseTypeName = Utils.GetNativeTypeName(type);
@@ -1908,7 +1923,7 @@ namespace behaviac
             }
 
             PropertyInfo f = m as PropertyInfo;
-            MethodInfo getter = f.GetGetMethod();
+            MethodInfo getter = f.GetGetMethod(false);
 
             if (getter != null)
             {
@@ -1916,7 +1931,7 @@ namespace behaviac
             }
             else
             {
-                MethodInfo setter = f.GetSetMethod();
+                MethodInfo setter = f.GetSetMethod(false);
 
                 if (setter != null)
                 {
@@ -1937,11 +1952,11 @@ namespace behaviac
             }
 
             PropertyInfo f = m as PropertyInfo;
-            MethodInfo getter = f.GetGetMethod();
+            MethodInfo getter = f.GetGetMethod(false);
 
             if (getter != null)
             {
-                MethodInfo setter = f.GetSetMethod();
+                MethodInfo setter = f.GetSetMethod(false);
 
                 if (setter == null)
                 {
@@ -2150,6 +2165,7 @@ namespace behaviac
                 CollectEnumTypeField(types, returnType);
             }
         }
+#endif//BEHAVIAC_RELEASE
 
 #if !BEHAVIAC_RELEASE
 
@@ -2161,6 +2177,7 @@ namespace behaviac
                 string desc = displayName;
 
                 Attribute[] attributes = (Attribute[])type.GetCustomAttributes(typeof(behaviac.TypeMetaInfoAttribute), false);
+                ERefType refType = ERefType.ERT_Undefined;
 
                 if (attributes.Length > 0)
                 {
@@ -2175,6 +2192,8 @@ namespace behaviac
                     {
                         desc = cda.Description;
                     }
+
+                    refType = cda.RefType;
                 }
 
                 string typeFullName = GetFullTypeName(type);
@@ -2184,10 +2203,23 @@ namespace behaviac
                 xmlWriter.WriteAttributeString("Type", typeFullName);
                 xmlWriter.WriteAttributeString("DisplayName", displayName);
                 xmlWriter.WriteAttributeString("Desc", desc);
-                xmlWriter.WriteAttributeString("IsRefType", type.IsClass ? "true" : "false");
+
+
+                bool bIsRefType = type.IsClass;
+                if (refType == ERefType.ERT_ValueType)
+                {
+                    bIsRefType = false;
+                }
+                else
+                {
+                    //if refType is undefined, a class is a ref type while a struct is a value type 
+                }
+
+                xmlWriter.WriteAttributeString("IsRefType", bIsRefType ? "true" : "false");
 
                 // members
-                if (!Utils.IsRefNullType(type))
+                //if (!Utils.IsRefNullType(type))
+                if (!bIsRefType)
                 {
                     ExportType(xmlWriter, type, false, onlyExportPublicMembers);
                 }
@@ -2535,25 +2567,27 @@ namespace behaviac
             {
                 string path = "";
 
-                if (Application.platform == RuntimePlatform.WindowsEditor)
+#if !BEHAVIAC_CS_ONLY
+                if (UnityEngine.Application.platform == UnityEngine.RuntimePlatform.WindowsEditor)
                 {
-                    path = Application.dataPath;
+                    path = UnityEngine.Application.dataPath;
                 }
-                else if (Application.platform == RuntimePlatform.WindowsPlayer)
+                else if (UnityEngine.Application.platform == UnityEngine.RuntimePlatform.WindowsPlayer)
                 {
-                    path = Application.dataPath;
+                    path = UnityEngine.Application.dataPath;
                 }
                 else
                 {
                     behaviac.Debug.LogWarning("only for dev!");
                     behaviac.Debug.Check(false);
                 }
+#endif
 
                 return path;
             }
         }
 
-#endif
+#endif//BEHAVIAC_RELEASE
 
         public bool ExportMetas(string xmlMetaFilePath, bool onlyExportPublicMembers)
         {
@@ -2569,7 +2603,9 @@ namespace behaviac
                 filePath = Path.Combine(this.DataPath, xmlMetaFilePath);
             }
 
+#if !BEHAVIAC_CS_ONLY
             if (Config.IsDesktopEditor)
+#endif
             {
                 RegisterMetas();
 
@@ -2591,7 +2627,7 @@ namespace behaviac
                             xmlWriter.WriteComment("EXPORTED BY TOOL, DON'T MODIFY IT!");
 
                             xmlWriter.WriteStartElement("metas");
-                            xmlWriter.WriteAttributeString("version", "3.0");
+                            xmlWriter.WriteAttributeString("version", "5");
                             xmlWriter.WriteAttributeString("language", "cs");
 
                             // export all types
@@ -2645,33 +2681,13 @@ namespace behaviac
                                     xmlWriter.WriteAttributeString("base", baseClass);
                                 }
 
-                                Attribute[] attributes = (Attribute[])agentType.GetCustomAttributes(typeof(behaviac.TypeMetaInfoAttribute), false);
-
-                                if (attributes.Length > 0)
                                 {
                                     //behaviac.AgentTypeAttribute cda = (behaviac.AgentTypeAttribute)attributes[0];
                                     Agent.CTagObjectDescriptor objectDesc = Agent.GetDescriptorByName(agentType.FullName);
 
-                                    xmlWriter.WriteAttributeString("DisplayName", objectDesc.displayName);
-                                    xmlWriter.WriteAttributeString("Desc", objectDesc.desc);
-                                    xmlWriter.WriteAttributeString("IsRefType", "true");
-
-                                    if (Utils.IsStaticType(agentType))
-                                    {
-                                        xmlWriter.WriteAttributeString("IsStatic", "true");
-                                    }
-
-                                    ExportType(xmlWriter, agentType, true, onlyExportPublicMembers);
-                                }
-                                else
-                                {
-                                    if (Utils.IsAgentType(agentType))
-                                    {
-                                        xmlWriter.WriteAttributeString("inherited", "true");
-                                    }
-
-                                    xmlWriter.WriteAttributeString("DisplayName", "");
-                                    xmlWriter.WriteAttributeString("Desc", "");
+                                    xmlWriter.WriteAttributeString("DisplayName", objectDesc != null ? objectDesc.displayName : "");
+                                    xmlWriter.WriteAttributeString("Desc", objectDesc != null ? objectDesc.desc : "");
+                                    //agent is a ref type no matter TypeMetaInfoAttribute
                                     xmlWriter.WriteAttributeString("IsRefType", "true");
 
                                     if (Utils.IsStaticType(agentType))
@@ -2683,7 +2699,10 @@ namespace behaviac
                                     {
                                         xmlWriter.WriteAttributeString("Namespace", agentType.Namespace.Replace(".", "::"));
                                     }
+
+                                    ExportType(xmlWriter, agentType, true, onlyExportPublicMembers);
                                 }
+              
 
                                 // end of agent
                                 xmlWriter.WriteEndElement();
@@ -2713,8 +2732,9 @@ namespace behaviac
                     behaviac.Debug.LogError(ex.Message);
                 }
             }
-
-#endif
+#else
+            Debug.LogWarning("when BEHAVIAC_RELEASE is defined, no Meta will be exported!");
+#endif//BEHAVIAC_RELEASE
             return false;
         }
 
@@ -2723,6 +2743,21 @@ namespace behaviac
             return ExportMetas(exportPathRelativeToWorkspace, false);
         }
 
+        private Assembly m_callingAssembly = null;
+        private Assembly CallingAssembly
+        {
+            get
+            {
+                if (m_callingAssembly == null)
+                {
+                    m_callingAssembly = Assembly.GetCallingAssembly();
+                }
+
+                return m_callingAssembly;
+            }
+        }
+
+#if !BEHAVIAC_RELEASE
         private class TypeInfo_t
         {
             public Type type;
@@ -2762,20 +2797,6 @@ namespace behaviac
             });
 
             return p != -1;
-        }
-
-        private Assembly m_callingAssembly = null;
-        private Assembly CallingAssembly
-        {
-            get
-            {
-                if (m_callingAssembly == null)
-                {
-                    m_callingAssembly = Assembly.GetCallingAssembly();
-                }
-
-                return m_callingAssembly;
-            }
         }
 
         private bool m_metaRegistered = false;
@@ -2899,6 +2920,20 @@ namespace behaviac
         {
             agentTypes.Sort(delegate(TypeInfo_t x, TypeInfo_t y)
             {
+                if (x == y || x.type == y.type)
+                {
+                    return 0;
+                }
+
+                if (x.type == typeof(behaviac.Agent))
+                {
+                    return -1;
+                }
+                else if (y.type == typeof(behaviac.Agent))
+                {
+                    return 1;
+                }
+
                 if (x.bIsInherited && !y.bIsInherited)
                 {
                     return -1;
@@ -2964,23 +2999,6 @@ namespace behaviac
                 {
                     CollectType(m_registerTypes, agentType, true, false);
                 }
-            }
-
-            var e = m_registerTypes.GetEnumerator();
-            while (e.MoveNext())
-            {
-                string typeName = e.Current.Key;
-                typeName = typeName.Replace("::", ".");
-                typeName = typeName.Replace("+", ".");
-
-                IVariable.RegisterType(e.Current.Value, typeName);
-
-                //int index = typeName.LastIndexOf(".");
-                //if (index >= 0)
-                //{
-                //    typeName = typeName.Substring(index + 1);
-                //    IVariable.RegisterType(type.Value, typeName);
-                //}
             }
         }
 
@@ -3145,7 +3163,7 @@ namespace behaviac
                 //Debug.LogWarning(msg);
             }
         }
-
+#endif//BEHAVIAC_RELEASE
         #endregion ExportMeta
     }
 }

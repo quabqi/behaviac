@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -11,11 +10,11 @@ public class PreconEffectorAgent : behaviac.Agent
         this.count_failure = 0;
         this.count_both = 0;
         this.ret = 0;
-        this.Variables.Clear();
     }
 
     public void init() {
         base.Init();
+
         resetProperties();
     }
 

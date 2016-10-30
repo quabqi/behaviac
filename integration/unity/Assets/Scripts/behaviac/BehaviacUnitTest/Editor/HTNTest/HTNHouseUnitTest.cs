@@ -1,8 +1,11 @@
+#if !BEHAVIAC_CS_ONLY
+
 using System;
 using System.Threading;
 using NUnit.Framework;
 using UnityEngine;
 
+#if BEHAVIAC_USE_HTN
 namespace BehaviorNodeUnitTest
 {
     [TestFixture]
@@ -11,7 +14,8 @@ namespace BehaviorNodeUnitTest
     {
         [Test]
         [Category("test_build_house")]
-        public void test_build_house() {
+        public void test_build_house()
+        {
             testAgent.btsetcurrent("node_test/htn/house/root");
             testAgent.resetProperties();
 
@@ -41,6 +45,8 @@ namespace BehaviorNodeUnitTest
             bool house = testAgent.GetVariable<bool>("House");
             Assert.AreEqual(true, house);
         }
-
     }
 }
+#endif//BEHAVIAC_USE_HTN
+
+#endif

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--EXPORTED BY TOOL, DON'T MODIFY IT!-->
 <!--Source File: Tank_Wander_RandomFire.xml-->
-<behavior name="Tank_Wander_RandomFire" agenttype="Player" version="3">
+<behavior name="Tank_Wander_RandomFire" agenttype="Player" version="5">
   <pars>
     <par name="parIn_Self" type="Player" value="null" />
     <par name="parT_RotateAngle" type="float" value="0" />
@@ -10,6 +10,7 @@
   <node class="DecoratorLoop" id="0">
     <property Count="const int -1" />
     <property DecorateWhenChildEnds="true" />
+    <property DoneWithinFrame="false" />
     <node class="Parallel" id="1">
       <property ChildFinishPolicy="CHILDFINISH_LOOP" />
       <property ExitPolicy="EXIT_ABORT_RUNNINGSIBLINGS" />
@@ -18,18 +19,22 @@
       <node class="Sequence" id="4">
         <node class="SelectorStochastic" id="2">
           <node class="Assignment" id="8">
+            <property CastRight="false" />
             <property Opl="float Self.Player::parT_AimAngle" />
             <property Opr="const float 180" />
           </node>
           <node class="Assignment" id="6">
+            <property CastRight="false" />
             <property Opl="float Self.Player::parT_AimAngle" />
             <property Opr="const float 90" />
           </node>
           <node class="Assignment" id="7">
+            <property CastRight="false" />
             <property Opl="float Self.Player::parT_AimAngle" />
             <property Opr="const float 0" />
           </node>
           <node class="Assignment" id="9">
+            <property CastRight="false" />
             <property Opl="float Self.Player::parT_AimAngle" />
             <property Opr="const float 270" />
           </node>
@@ -57,6 +62,7 @@
           <property Weight="const int 30" />
           <node class="Sequence" id="14">
             <node class="Assignment" id="15">
+              <property CastRight="false" />
               <property Opl="float Self.Player::parT_RotateAngle" />
               <property Opr="GameLevel.GameLevelCommon::getAvailabeMoveDirection(Player Self.Player::parIn_Self,UNKNOWN)" />
             </node>

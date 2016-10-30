@@ -22,12 +22,14 @@ namespace behaviac
 {
     Context::Contexts_t* Context::ms_contexts = NULL;
 
-    Context::Context(int contextId) : m_context_id(contextId), m_bCreatedByMe(false)
+	Context::Context(int contextId) : m_context_id(contextId), m_bCreatedByMe(false), m_IsExecuting(false)
     {
     }
 
     Context::~Context()
     {
+		m_IsExecuting = false;
+
 		delayAddedAgents.clear();
 		delayRemovedAgents.clear();
 
@@ -141,7 +143,7 @@ namespace behaviac
         for (AgentTypeStaticVariables_t::iterator it = m_static_variables.begin(); it != m_static_variables.end(); ++it)
         {
             Variables& variables = it->second;
-            variables.Clear();
+            variables.Clear(true);
         }
 
         m_static_variables.clear();
@@ -284,11 +286,23 @@ namespace behaviac
         return true;
     }
 
+	bool Context::IsExecuting()
+	{
+		return m_IsExecuting;
+	}
+
 	void Context::AddAgent(Agent* pAgent)
 	{
 		if (pAgent != NULL)
 		{
-			delayAddedAgents.push_back(pAgent);
+			if (IsExecuting())
+			{
+				delayAddedAgents.push_back(pAgent);
+			}
+			else
+			{
+				addAgent_(pAgent);
+			}
 		}
 	}
 
@@ -296,7 +310,14 @@ namespace behaviac
 	{
 		if (pAgent != NULL)
 		{
-			delayRemovedAgents.push_back(pAgent);
+			if (IsExecuting())
+			{
+				delayRemovedAgents.push_back(pAgent);
+			}
+			else
+			{
+				removeAgent_(pAgent);
+			}
 		}
 	}
 
@@ -346,18 +367,28 @@ namespace behaviac
 
 	void Context::DelayProcessingAgents()
 	{
-		for (unsigned int i = 0; i < delayAddedAgents.size(); ++i)
+		if (delayAddedAgents.size() > 0)
 		{
-			addAgent_(delayAddedAgents[i]);
+			for (unsigned int i = 0; i < delayAddedAgents.size(); ++i)
+			{
+				addAgent_(delayAddedAgents[i]);
+			}
+
+			delayAddedAgents.clear();
 		}
 
-		for (unsigned int i = 0; i < delayRemovedAgents.size(); ++i)
+		if (delayRemovedAgents.size() > 0)
 		{
-			removeAgent_(delayRemovedAgents[i]);
-		}
+			for (unsigned int i = 0; i < delayRemovedAgents.size(); ++i)
+			{
+				removeAgent_(delayRemovedAgents[i]);
 
-		delayAddedAgents.clear();
-		delayRemovedAgents.clear();
+				// It should be deleted absolutely here.
+				BEHAVIAC_DELETE(delayRemovedAgents[i]);
+			}
+
+			delayRemovedAgents.clear();
+		}
 	}
 
     void Context::execAgents(int contextId)
@@ -368,7 +399,7 @@ namespace behaviac
 
 			pContext.execAgents_();
         }
-        else
+		else if (ms_contexts != NULL)
         {
             for (Contexts_t::iterator it = ms_contexts->begin(); it != ms_contexts->end(); ++it)
             {
@@ -381,7 +412,12 @@ namespace behaviac
 
     void Context::execAgents_()
     {
-		this->DelayProcessingAgents();
+		if (!Workspace::GetInstance()->IsExecAgents())
+		{
+			return;
+		}
+
+		m_IsExecuting = true;
 
 		std::make_heap(this->m_agents.begin(), this->m_agents.end(), HeapCompare_t());
 
@@ -398,6 +434,7 @@ namespace behaviac
                     pA->btexec();
                 }
 
+				// in case IsExecAgents was set to false by pA's bt
                 if (!Workspace::GetInstance()->IsExecAgents())
                 {
                     break;
@@ -409,6 +446,10 @@ namespace behaviac
         {
             this->LogStaticVariables(0);
         }
+
+		m_IsExecuting = false;
+
+		this->DelayProcessingAgents();
     }
 
     //void Context::btexec()
@@ -501,14 +542,14 @@ namespace behaviac
         return 0;
     }
 
-    CNamedEvent* Context::FindNamedEventTemplate(const CTagObject::MethodsContainer& methods, const char* eventName)
+    CNamedEvent* Context::FindNamedEventTemplate(const behaviac::CTagObject::MethodsContainer& methods, const char* eventName)
     {
         CStringID eventID(eventName);
 
         //reverse, so the event in the derived class can override the one in the base class
-        for (CTagObject::MethodsContainer::const_reverse_iterator it = methods.rbegin(); it != methods.rend(); ++it)
+        for (behaviac::CTagObject::MethodsContainer::const_reverse_iterator it = methods.rbegin(); it != methods.rend(); ++it)
         {
-            const CMethodBase* pMethod = *it;
+            const behaviac::CMethodBase* pMethod = *it;
 
             const char* methodName = pMethod->GetName();
             CStringID methodID(methodName);

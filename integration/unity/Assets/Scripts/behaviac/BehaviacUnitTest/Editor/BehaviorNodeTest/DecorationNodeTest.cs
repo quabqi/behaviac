@@ -11,8 +11,11 @@
 // See the License for the specific language governing permissions and limitations under the License.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+#if !BEHAVIAC_CS_ONLY
+
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace BehaviorNodeUnitTest
@@ -66,8 +69,21 @@ namespace BehaviorNodeUnitTest
             while (loopCount > 0)
             {
                 testAgent.resetProperties();
-                testAgent.btexec();
+
+                behaviac.EBTStatus status = testAgent.btexec();
+
+		        Assert.AreEqual(behaviac.EBTStatus.BT_RUNNING, status);
                 Assert.AreEqual(0, testAgent.testVar_0);
+
+                behaviac.BehaviorTreeTask btTask = testAgent.CurrentBT;
+                Assert.AreNotEqual(null, btTask);
+
+                List<behaviac.BehaviorTask> nodes = btTask.GetRunningNodes(false);
+                Assert.AreEqual(3, nodes.Count);
+
+                List<behaviac.BehaviorTask> leaves = btTask.GetRunningNodes(true);
+                Assert.AreEqual(0, leaves.Count);
+
                 --loopCount;
             }
         }
@@ -108,6 +124,17 @@ namespace BehaviorNodeUnitTest
             testAgent.btexec();
             Assert.AreEqual(5, testAgent.testVar_0);
         }
+
+        [Test]
+        [Category("test_decoration_repeat_1")]
+        public void test_decoration_repeat_1()
+        {
+            testAgent.btsetcurrent("node_test/repeat/repeat_ut_1");
+            testAgent.resetProperties();
+            testAgent.btexec();
+            Assert.AreEqual(5, testAgent.testVar_0);
+        }
+
         [Test]
         [Category("test_decoration_not_0")]
         public void test_decoration_not_0()
@@ -560,3 +587,5 @@ namespace BehaviorNodeUnitTest
         }
     }
 }
+
+#endif

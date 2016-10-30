@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--EXPORTED BY TOOL, DON'T MODIFY IT!-->
 <!--Source File: Tank_SafeWander.xml-->
-<behavior name="Tank_SafeWander" agenttype="Player" version="3">
+<behavior name="Tank_SafeWander" agenttype="Player" version="5">
   <pars>
     <par name="parT_SafeMoveDirection" type="eMapDirection" value="UNKNOWN" />
   </pars>
@@ -9,6 +9,7 @@
     <property DecorateWhenChildEnds="false" />
     <node class="Sequence" id="1">
       <node class="Assignment" id="2">
+        <property CastRight="false" />
         <property Opl="eMapDirection Self.Player::parT_SafeMoveDirection" />
         <property Opr="Self.GameActor::getBestMoveDirection(UNKNOWN)" />
       </node>

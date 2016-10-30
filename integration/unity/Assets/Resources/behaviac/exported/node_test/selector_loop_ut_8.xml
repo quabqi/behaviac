@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--EXPORTED BY TOOL, DON'T MODIFY IT!-->
 <!--Source File: node_test\selector_loop_ut_8.xml-->
-<behavior name="node_test/selector_loop_ut_8" agenttype="AgentNodeTest" version="3">
+<behavior name="node_test/selector_loop_ut_8" agenttype="AgentNodeTest" version="5">
   <node class="Sequence" id="15">
     <node class="Action" id="16">
       <property Method="Self.AgentNodeTest::SelectTarget()" />
       <property ResultOption="BT_SUCCESS" />
     </node>
     <node class="Assignment" id="21">
+      <property CastRight="false" />
       <property Opl="int Self.AgentNodeTest::testVar_1" />
       <property Opr="const int 0" />
     </node>
@@ -23,6 +24,7 @@
         <node class="DecoratorLoop" id="9">
           <property Count="const int -1" />
           <property DecorateWhenChildEnds="false" />
+          <property DoneWithinFrame="false" />
           <attachment class="Precondition" id="14" flag="precondition">
             <property BinaryOperator="And" />
             <property Operator="Equal" />
@@ -114,6 +116,7 @@
         </node>
       </node>
       <node class="Assignment" id="25">
+        <property CastRight="false" />
         <property Opl="int Self.AgentNodeTest::testVar_1" />
         <property Opr="const int 100" />
       </node>

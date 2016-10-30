@@ -53,6 +53,45 @@ enum EnumTest
 
 DECLARE_BEHAVIAC_OBJECT_ENUM(EnumTest, EnumTest);
 
+class Act
+{
+public:
+	bool Var_B_Loop;
+
+	behaviac::vector<EnumTest> Var_List_EnumTest;
+
+	DECLARE_BEHAVIAC_STRUCT(Act);
+};
+
+namespace BSASN
+{
+	class SpatialCoord
+	{
+	public:
+		float coordX;
+		float coordY;
+
+		DECLARE_BEHAVIAC_STRUCT(BSASN::SpatialCoord);
+	};
+
+	struct TransitPlan
+	{
+	public:
+		behaviac::string plan_ID;
+		int plan_selection_precedence;
+
+		behaviac::vector<BSASN::SpatialCoord> transit_points;
+
+		DECLARE_BEHAVIAC_STRUCT(BSASN::TransitPlan);
+	};
+}
+
+class TestClassA
+{
+public:
+	DECLARE_BEHAVIAC_STRUCT(TestClassA, true);
+};
+
 class ChildNodeTest;
 class AgentNodeTest : public behaviac::Agent
 {
@@ -62,6 +101,7 @@ public:
 
     DECLARE_BEHAVIAC_AGENT(AgentNodeTest, behaviac::Agent);
 
+	ChildNodeTest* par_child;
     int testVar_0;
     int testVar_1;
     float testVar_2;
@@ -86,9 +126,12 @@ public:
 	bool m_bCanSee;
 	bool m_bTargetValid;
 
-	EnumTest	testColor;
+	EnumTest testColor;
 
-	TestNS::Float2	TestFloat2;
+	TestNS::Float2 TestFloat2;
+
+	Act testVar_Act;
+
 public:
     virtual void resetProperties();
 
@@ -108,7 +151,7 @@ public:
     {
         ChildAgentType* childAgent = behaviac::Agent::Create<ChildAgentType>(var_0,strChildAgentName,0,0);
         return childAgent;
-    };
+    }
 
     void setEventVarInt(int var)
     {
@@ -215,6 +258,28 @@ public:
 		return this->TestFloat2;
 	}
 
+	behaviac::EBTStatus return_status(const TestNS::Float2& f2)
+	{
+		if (behaviac::IsEqualWithEpsilon(f2.x, 2.0f, 0.001f) &&
+			behaviac::IsEqualWithEpsilon(f2.y, 2.0f, 0.001f))
+		{
+			return behaviac::BT_SUCCESS;
+		}
+
+		return behaviac::BT_FAILURE;
+	}
+
+	TestClassA* TestFunC()
+	{
+		//possible memory leak, however it doesn't matter ...
+		return BEHAVIAC_NEW TestClassA();
+	}
+
+	behaviac::EBTStatus TestFuncD(TestClassA* fun)
+	{
+		return fun ? behaviac::BT_SUCCESS : behaviac::BT_FAILURE;
+	}
+
     behaviac::EBTStatus switchRef(const behaviac::string& refTree)
     {
         this->btreferencetree(refTree.c_str());
@@ -288,7 +353,27 @@ public:
 	{
 		return behaviac::BT_RUNNING;
 	}
+
+	const char* GetRefTree() const {
+		return "node_test/reference_sub_0";
+	}
+
     void initChildAgent();
+
+	void testVectorStruct(const behaviac::vector<TestNS::Float2>& param)
+	{
+	}
+
+	void transitPlanTactics(BSASN::TransitPlan task_tactics_type, EnumTest enumTest, const behaviac::string& platform_ID)
+	{
+		BEHAVIAC_ASSERT(task_tactics_type.transit_points.size() == 3);
+		BEHAVIAC_ASSERT(enumTest == EnumTest_OneAfterOne);
+		BEHAVIAC_ASSERT(platform_ID.empty());
+	}
+
+	void testString(behaviac::string str)
+	{
+	}
 };
 
 
@@ -303,4 +388,21 @@ public:
 public:
 	float GetConstFloatValue();
 	double GetConstDoubleValue();
+};
+
+class ChildNodeTestSub : public ChildNodeTest
+{
+public:
+	ChildNodeTestSub(int var_0) : ChildNodeTest(var_0), IntValue(0)
+	{
+	}
+
+	DECLARE_BEHAVIAC_AGENT(ChildNodeTestSub, ChildNodeTest);
+public:
+	float GetConstFloatValueSub()
+	{
+		return 1000.0f;
+	}
+
+	int IntValue;
 };

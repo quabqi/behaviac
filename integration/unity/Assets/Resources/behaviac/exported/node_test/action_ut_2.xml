@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--EXPORTED BY TOOL, DON'T MODIFY IT!-->
 <!--Source File: node_test\action_ut_2.xml-->
-<behavior name="node_test/action_ut_2" agenttype="AgentNodeTest" version="3">
+<behavior name="node_test/action_ut_2" agenttype="AgentNodeTest" version="5">
   <pars>
     <par name="par_int_type_0" type="int" value="0" />
     <par name="par_int_type_1" type="int" value="0" />
@@ -9,10 +9,12 @@
   </pars>
   <node class="Sequence" id="0">
     <node class="Assignment" id="7">
+      <property CastRight="false" />
       <property Opl="int Self.AgentNodeTest::par_int_type_0" />
       <property Opr="const int 1" />
     </node>
     <node class="Assignment" id="6">
+      <property CastRight="false" />
       <property Opl="int Self.AgentNodeTest::test_int_array[int Self.AgentNodeTest::par_int_type_0]" />
       <property Opr="const int 5" />
     </node>
@@ -41,6 +43,7 @@
       <property ResultOption="BT_SUCCESS" />
     </node>
     <node class="Assignment" id="3">
+      <property CastRight="false" />
       <property Opl="int Self.AgentNodeTest::par_int_type_1" />
       <property Opr="int Self.AgentNodeTest::testVar_0" />
     </node>
@@ -52,6 +55,10 @@
     </node>
     <node class="Action" id="5">
       <property Method="Self.AgentNodeTest::setTestVar_1(int Self.AgentNodeTest::par_int_type_0)" />
+      <property ResultOption="BT_SUCCESS" />
+    </node>
+    <node class="Action" id="11">
+      <property Method="Self.AgentNodeTest::testString(&quot;Hello\&quot; \t \n Kitty!&quot;)" />
       <property ResultOption="BT_SUCCESS" />
     </node>
   </node>

@@ -1,16 +1,15 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
 using System.Collections;
 
 [behaviac.TypeMetaInfo()]
 public class PropertyReadonlyAgent : behaviac.Agent
 {
     public void resetProperties() {
-        this.Variables.Clear();
     }
 
     public void init() {
         base.Init();
+
         resetProperties();
     }
 

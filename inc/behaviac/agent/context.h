@@ -41,7 +41,6 @@ namespace behaviac
 
     /// The Context class
     /*!
-    I don't know what is this!
     */
     class BEHAVIAC_API Context
     {
@@ -53,11 +52,13 @@ namespace behaviac
         void LogCurrentState();
 
     public:
-		void AddAgent(Agent* pAgent);
-        void RemoveAgent(Agent* pAgent);
-
         static void execAgents(int contextId);
         static Context& GetContext(int contextId);
+
+		void AddAgent(Agent* pAgent);
+		void RemoveAgent(Agent* pAgent);
+
+		bool IsExecuting();
 
         template<typename VariableType>
         const VariableType* GetStaticVariable(const char* staticClassName, uint32_t variableId)
@@ -98,11 +99,11 @@ namespace behaviac
         if staticClassName is no null, it is for static variable
         */
         template<typename VariableType>
-        void SetStaticVariable(const CMemberBase* pMember, const char* variableName, const VariableType& value, const char* staticClassName, uint32_t varableId);
+        void SetStaticVariable(const behaviac::CMemberBase* pMember, const char* variableName, const VariableType& value, const char* staticClassName, uint32_t varableId);
 
         const CNamedEvent* FindEventStatic(const char* eventName, const char* className);
         void InsertEventGlobal(const char* className, CNamedEvent* pEvent);
-        CNamedEvent* FindNamedEventTemplate(const CTagObject::MethodsContainer& methods, const char* eventName);
+        CNamedEvent* FindNamedEventTemplate(const behaviac::CTagObject::MethodsContainer& methods, const char* eventName);
 
         /**
         bind 'agentInstanceName' to 'pAgentInstance'.
@@ -183,6 +184,7 @@ namespace behaviac
 
         int     m_context_id;
         bool    m_bCreatedByMe;
+		bool	m_IsExecuting;
     };
     /*! @} */
     /*! @} */

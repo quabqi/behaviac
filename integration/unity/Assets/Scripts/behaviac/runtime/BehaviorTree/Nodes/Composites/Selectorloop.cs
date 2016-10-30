@@ -17,14 +17,6 @@ namespace behaviac
 {
     public class SelectorLoop : BehaviorNode
     {
-        public SelectorLoop()
-        {
-        }
-
-        ~SelectorLoop()
-        {
-        }
-
         protected override void load(int version, string agentType, List<property_t> properties)
         {
             base.load(version, agentType, properties);
@@ -68,19 +60,6 @@ namespace behaviac
 
         public class SelectorLoopTask : CompositeTask
         {
-            public SelectorLoopTask()
-            {
-            }
-
-            ~SelectorLoopTask()
-            {
-            }
-
-            public override void Init(BehaviorNode node)
-            {
-                base.Init(node);
-            }
-
             protected override void addChild(BehaviorTask pBehavior)
             {
                 base.addChild(pBehavior);
@@ -182,7 +161,7 @@ namespace behaviac
                         this.m_activeChildIndex != index)
                     {
                         WithPreconditionTask pCurrentSubTree = (WithPreconditionTask)this.m_children[this.m_activeChildIndex];
-                        BehaviorTask action = pCurrentSubTree.ActionNode;
+                        //BehaviorTask action = pCurrentSubTree.ActionNode;
                         pCurrentSubTree.abort(pAgent);
 
                         //don't set it here

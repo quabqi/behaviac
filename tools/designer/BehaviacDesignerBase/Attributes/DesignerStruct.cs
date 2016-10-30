@@ -50,7 +50,13 @@ namespace Behaviac.Design.Attributes
         public override object FromStringValue(List<Nodes.Node.ErrorCheck> result, DefaultObject node, object parentObject, Type type, string str)
         {
             if (Plugin.IsCustomClassType(type))
-            { return ParseStringValue(result, type, null, str, node); }
+            { 
+                return ParseStringValue(result, type, null, str, node); 
+            }
+            else if (Plugin.IsArrayType(type))
+            {
+                return DesignerArray.ParseStringValue(result, type, str, node);
+            }
 
             throw new Exception(Resources.ExceptionDesignerAttributeInvalidType);
         }
@@ -122,36 +128,65 @@ namespace Behaviac.Design.Attributes
 
                         object member = property.GetValue(obj);
 
-                        if (property.Attribute is DesignerStruct) {
-                            str += RetrieveExportValue(member, parent, paramName, bSave);
+                        Type memberType = null;
 
-                        } else {
-                            bool bStructProperty = false;
+                        if (member != null)
+                        {
+                            memberType = member.GetType();
+                        }
+                        else
+                        {
+                            memberType = property.GetTypeFallback();
+                        }
 
-                            if (method != null) {
-                                MethodDef.Param param = method.GetParam(paramName, property, indexInArray);
+                        if (Plugin.IsArrayType(memberType))
+                        {
+                            str += DesignerArray.RetrieveExportValue(member);
+                        }
+                        else
+                        {
+                            if (property.Attribute is DesignerStruct)
+                            {
+                                str += RetrieveExportValue(member, parent, paramName, bSave);
+                            }
+                            else
+                            {
+                                bool bStructProperty = false;
 
-                                if (param != null) {
-                                    bStructProperty = true;
-                                    string s = param.GetExportValue(null);
+                                if (method != null)
+                                {
+                                    MethodDef.Param param = method.GetParam(paramName, property, indexInArray);
 
-                                    if (Plugin.IsStringType(param.Value.GetType())) {
-                                        str += string.Format("\"{0}\"", s);
+                                    if (param != null)
+                                    {
+                                        bStructProperty = true;
+                                        string s = param.GetExportValue(null);
 
-                                    } else {
-                                        str += s;
+                                        if (Plugin.IsStringType(param.Value.GetType()))
+                                        {
+                                            str += string.Format("\"{0}\"", s);
+
+                                        }
+                                        else
+                                        {
+                                            str += s;
+                                        }
                                     }
                                 }
-                            }
 
-                            if (!bStructProperty) {
-                                string s = property.GetExportValue(obj);
+                                if (!bStructProperty)
+                                {
+                                    string s = property.GetExportValue(obj);
 
-                                if (Plugin.IsStringType(property.Property.PropertyType)) {
-                                    str += string.Format("\"{0}\"", s);
+                                    if (Plugin.IsStringType(property.Property.PropertyType))
+                                    {
+                                        str += string.Format("\"{0}\"", s);
 
-                                } else {
-                                    str += s;
+                                    }
+                                    else
+                                    {
+                                        str += s;
+                                    }
                                 }
                             }
                         }
@@ -180,7 +215,10 @@ namespace Behaviac.Design.Attributes
             Debug.Check(obj != null);
 
             Type type = obj.GetType();
-            Debug.Check(Plugin.IsCustomClassType(type));
+            if (!Plugin.IsCustomClassType(type))
+            {
+                return false;
+            }
 
             MethodDef method = parent as MethodDef;
             IList<DesignerPropertyInfo> properties = DesignerProperty.GetDesignerProperties(type);
@@ -304,7 +342,13 @@ namespace Behaviac.Design.Attributes
                                 MethodDef method = action.Method;
 
                                 if (method != null) {
-                                    parParam = method.GetParam(paramName, type, obj, property);
+                                    string pn = "";
+                                    if (paramName == null)
+                                    {
+                                        pn = propertyName;
+                                    }
+
+                                    parParam = method.GetParam(pn, type, obj, property);
                                 }
                             }
 
@@ -335,7 +379,7 @@ namespace Behaviac.Design.Attributes
                             if (!bParamFromStruct) {
                                 property.SetValueFromString(result, obj, propertyValue, node);
 
-                                if (parParam != null) {
+                                if (parParam != null && parParam.Value == null) {
                                     parParam.Value = property.GetValue(obj);
                                 }
                             }

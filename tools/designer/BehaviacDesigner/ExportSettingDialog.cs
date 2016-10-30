@@ -52,8 +52,7 @@ namespace Behaviac.Design
                 string exportFullPath = Workspace.Current.GetExportAbsoluteFolder(_exporterInfo.ID);
                 this.exportFolderTextBox.Text = exportFullPath;
 
-                this.unifiedCheckBox.Checked = Workspace.Current.ExportedUnifiedFile(_exporterInfo.ID);
-                this.generateCustomizedTypesCheckBox.Checked = Workspace.Current.GenerateCustomizedTypes(_exporterInfo.ID);
+                this.generatedFileCountNumeric.Value = Workspace.Current.ExportFileCount(_exporterInfo.ID);
 
                 List<string> exportIncludedFilenames = Workspace.Current.GetExportIncludedFilenames(_exporterInfo.ID);
                 foreach(string filename in exportIncludedFilenames) {
@@ -70,8 +69,7 @@ namespace Behaviac.Design
                 string wsFilename = Workspace.Current.FileName;
                 wsFilename = wsFilename.Replace('/', '\\');
 
-                bool exportUnifiedFile = this.unifiedCheckBox.Checked;
-                bool generateCustomizedTypes = this.generateCustomizedTypesCheckBox.Checked;
+                int exporBehaviorCount = (int)this.generatedFileCountNumeric.Value;
 
                 string exportFullPath = this.exportFolderTextBox.Text.Replace('/', '\\');
                 string exportFolder = exportFullPath;
@@ -87,7 +85,7 @@ namespace Behaviac.Design
                     exportIncludedFilenames.Add(filename);
                 }
 
-                Workspace.Current.SetExportInfo(_exporterInfo.ID, Workspace.Current.ShouldBeExported(_exporterInfo.ID), exportUnifiedFile, generateCustomizedTypes, exportFolder, exportIncludedFilenames);
+                Workspace.Current.SetExportInfo(_exporterInfo.ID, Workspace.Current.ShouldBeExported(_exporterInfo.ID), exporBehaviorCount, exportFolder, exportIncludedFilenames);
 
                 Workspace.SaveWorkspaceFile(Workspace.Current);
             }
@@ -193,6 +191,16 @@ namespace Behaviac.Design
                     row.Cells["filenameColumn"].Value = filename;
                 }
             }
+        }
+
+        private void exportFolderTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void exportFolderLabel_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

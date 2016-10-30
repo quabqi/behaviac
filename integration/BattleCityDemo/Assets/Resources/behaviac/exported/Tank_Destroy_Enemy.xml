@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--EXPORTED BY TOOL, DON'T MODIFY IT!-->
 <!--Source File: Tank_Destroy_Enemy.xml-->
-<behavior name="Tank_Destroy_Enemy" agenttype="Player" version="3">
+<behavior name="Tank_Destroy_Enemy" agenttype="Player" version="5">
   <pars>
     <par name="parT_enemyPosition" type="UnityEngine::Vector3" value="{x=0;y=0;z=0;}" />
     <par name="parT_nearestEnemy" type="behaviac::Agent" value="null" />
@@ -11,6 +11,7 @@
     <node class="Selector" id="11">
       <node class="Sequence" id="2">
         <node class="Assignment" id="5">
+          <property CastRight="false" />
           <property Opl="behaviac::Agent Self.Player::parT_nearestEnemy" />
           <property Opr="GameLevel.GameLevelCommon::getNearestEnemy(eGameForce Self.GameActor::force)" />
         </node>
@@ -20,6 +21,7 @@
           <property Opr="const behaviac::Agent null" />
         </node>
         <node class="Assignment" id="7">
+          <property CastRight="false" />
           <property Opl="UnityEngine::Vector3 Self.Player::parT_enemyPosition" />
           <property Opr="GameLevel.GameLevelCommon::getEnemyPosition(behaviac::Agent Self.Player::parT_nearestEnemy)" />
         </node>

@@ -101,13 +101,21 @@ namespace PluginBehaviac.NodeExporters
                     {
                         string propBasicName = prop.BasicName.Replace("[]", "");
                         uint id = Behaviac.Design.CRC32.CalcCRC(propBasicName);
-
+                        string agentName = PropertyCsExporter.GetGenerateAgentName(prop, "opl", "assignment");
                         string typename = DataCsExporter.GetGeneratedNativeType(prop.NativeType);
-                        stream.WriteLine("{0}\t\t\tpAgent.SetVariable<{1}>(\"{2}\", {3}, {4}u);", indent, typename, propBasicName, oprStr, id);
+
+                        stream.WriteLine("{0}\t\t\t{1}.SetVariable<{2}>(\"{3}\", {4}u, {5});", indent, agentName, typename, propBasicName, id, oprStr);
                     }
                     else
                     {
-                        stream.WriteLine("{0}\t\t\t{1} = {2};", indent, property, oprStr);
+                        if (assignment.IsCasting)
+                        {
+                            stream.WriteLine("{0}\t\t\t{1} = ({2}){3};", indent, property, DataCsExporter.GetGeneratedNativeType(assignment.Opl.ValueType), oprStr);
+                        }
+                        else
+                        {
+                            stream.WriteLine("{0}\t\t\t{1} = {2};", indent, property, oprStr);
+                        }
                     }
                 }
 

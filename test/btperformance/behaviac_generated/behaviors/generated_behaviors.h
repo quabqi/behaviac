@@ -80,9 +80,11 @@ and you also need to include your agent types' headers before it:
 // You should set the agent header files of your game
 // when exporting cpp files in the behaviac editor:
 
-using namespace behaviac;
-
 // Agent property and method handlers
+
+namespace behaviac
+{
+}
 
 namespace behaviac
 {
@@ -95,6 +97,7 @@ namespace behaviac
 		DecoratorLoop_bt_performance_Performance_node1()
 		{
 			m_bDecorateWhenChildEnds = true;
+			m_bDoneWithinFrame = false;
 		}
 	protected:
 		virtual int GetCount(Agent* pAgent) const

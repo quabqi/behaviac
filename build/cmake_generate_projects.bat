@@ -9,40 +9,52 @@ IF %ERRORLEVEL% NEQ 0 GOTO l_cmake_error
 mkdir cmake_binary
 cd cmake_binary
 
-rem ----------------------------------------------------
-rem mkdir vs2015
-rem cd vs2015
-rem cmake -G "Visual Studio 14" --build ../../..
-rem cd ..
-
+echo ---------------------------------------------------------------------------------
 mkdir vs2013
 cd vs2013
+REM cmake -G "Visual Studio 12 2013 Win64" --build ../../..
+REM cmake -G "Visual Studio 12 2013" -DBEHAVIAC_VERSION_MODE=ForeUseRelease --build ../../..
 cmake -G "Visual Studio 12 2013" --build ../../..
 cd ..
 
-rem ----------------------------------------------------
+REM echo ---------------------------------------------------------------------------------
+REM mkdir vs2015
+REM cd vs2015
+REM cmake -G "Visual Studio 14 2015 Win64" --build ../../..
+REM cmake -G "Visual Studio 14 2015" -DBEHAVIAC_VERSION_MODE=ForeUseRelease --build ../../..
+REM cmake -G "Visual Studio 14 2015" --build ../../..
+REM cd ..
+
+
+where make
+IF %ERRORLEVEL% NEQ 0 GOTO l_no_make
+
 mkdir linux
 cd linux
 
+echo ---------------------------------------------------------------------------------
 mkdir debug
 cd debug
+REM cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_64BITS=ON -DBUILD_ENABLE_LUA=ON --build ../../../..
 cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug --build ../../../..
 cd ..
 
+echo ---------------------------------------------------------------------------------
 mkdir release
 cd release
+REM cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DBEHAVIAC_VERSION_MODE=ForeUseRelease --build ../../../..
 cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release --build ../../../..
 cd ..
 
 rem linux
 cd ..
-rem ----------------------------------------------------
+echo ---------------------------------------------------------------------------------
 mkdir sublime
 cd sublime
 cmake -G "Sublime Text 2 - Unix Makefiles" --build ../../..
 cd ..
 
-rem ----------------------------------------------------example airbattledemo
+:l_no_make
 
 if not exist ..\..\example\airbattledemo\CMakeLists.txt (
 	pushd ..\..\example\airbattledemo\ 
@@ -51,13 +63,13 @@ if not exist ..\..\example\airbattledemo\CMakeLists.txt (
 )
 
 
+echo ---------------------------------------------------------------------------------
 mkdir example_airbattledemo_vs2013
 cd example_airbattledemo_vs2013
 rem use vs2013 only, it seems cocos vs2015 version is buggy
 cmake -G "Visual Studio 12 2013" --build ../../../example/airbattledemo
 cd ..
 
-rem ----------------------------------------------------
 rem back cmake_binary
 cd ..
 

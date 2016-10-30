@@ -11,7 +11,6 @@
 // See the License for the specific language governing permissions and limitations under the License.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-using UnityEngine;
 using System.Collections;
 using System;
 using System.Collections.Generic;
@@ -82,7 +81,8 @@ public class ParTestAgent : ParTestAgentBase
     }
 
     public void initAgent() {
-        base.Init();
+        this.Init();
+
         resetProperties();
     }
 

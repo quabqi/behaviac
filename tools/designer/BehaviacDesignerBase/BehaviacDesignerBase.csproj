@@ -193,6 +193,7 @@
     <Compile Include="NodeUI\BehaviorUIPolicy.cs" />
     <Compile Include="NodeUI\AttachActionUIPolicy.cs" />
     <Compile Include="NodeUI\ObjectUIPolicy.cs" />
+    <Compile Include="NodeUI\TransitionEffectorUIPolicy.cs" />
     <Compile Include="NodeViewData\NodeViewData.SubItemAttachAction.cs" />
     <Compile Include="NodeViewData\NodeViewData.SubItemAttachment.cs" />
     <Compile Include="Debug.cs" />
@@ -218,7 +219,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="NodeViewData\NodeViewData.SubItemOverride.cs" />
-    <Compile Include="NodeViewData\NodeViewDataReferencedBehavior.cs" />
     <Compile Include="Attachments\Overrides\Override.cs" />
     <Compile Include="Attachments\Overrides\OverrideRandom.cs" />
     <Compile Include="Plugin.cs" />

@@ -25,6 +25,7 @@ void registerAllTypes()
     //< new types
     behaviac::Agent::Register<AgentNodeTest>();
     behaviac::Agent::Register<ChildNodeTest>();
+    behaviac::Agent::Register<ChildNodeTestSub>();
 
     behaviac::TypeRegister::Register<TNS::ST::PER::WRK::kEmployee>("TNS::ST::PER::WRK::kEmployee");
     behaviac::TypeRegister::Register<TNS::ST::kCar>("TNS::ST::kCar");
@@ -33,6 +34,11 @@ void registerAllTypes()
     behaviac::TypeRegister::Register<TestNS::Node>("TestNS::Node");
     behaviac::TypeRegister::Register<TestNS::Float2>("TestNS::Float2");
 	behaviac::TypeRegister::Register<EnumTest>("EnumTest");
+	behaviac::TypeRegister::Register<Act>("Act");
+	behaviac::TypeRegister::Register<BSASN::SpatialCoord>("BSASN::SpatialCoord");
+	behaviac::TypeRegister::Register<BSASN::TransitPlan>("BSASN::TransitPlan");
+	behaviac::TypeRegister::Register<TestNamespace::ClassAsValueType>("TestNamespace::ClassAsValueType");
+	behaviac::TypeRegister::Register<TestNamespace::Float2>("TestNamespace::Float2");
 
     behaviac::Agent::Register<EmployeeParTestAgent>();
 
@@ -76,12 +82,18 @@ void unregisterAllTypes()
     behaviac::TypeRegister::UnRegister<TNS::NE::NAT::eColor>("TNS::NE::NAT::eColor");
     behaviac::TypeRegister::UnRegister<TNS::ST::PER::WRK::kEmployee>("TNS::ST::PER::WRK::kEmployee");
 
+    behaviac::Agent::UnRegister<ChildNodeTestSub>();
     behaviac::Agent::UnRegister<ChildNodeTest>();
     behaviac::Agent::UnRegister<AgentNodeTest>();
 
     behaviac::TypeRegister::UnRegister<UnityEngine::Vector3>("UnityEngine::Vector3");
     behaviac::TypeRegister::UnRegister<FSMAgentTest::EMessage>("FSMAgentTest::EMessage");
 	behaviac::TypeRegister::UnRegister<EnumTest>("EnumTest");
+	behaviac::TypeRegister::UnRegister<Act>("Act");
+	behaviac::TypeRegister::UnRegister<BSASN::SpatialCoord>("BSASN::SpatialCoord");
+	behaviac::TypeRegister::UnRegister<BSASN::TransitPlan>("BSASN::TransitPlan");
+	behaviac::TypeRegister::UnRegister<TestNamespace::ClassAsValueType>("TestNamespace::ClassAsValueType");
+	behaviac::TypeRegister::UnRegister<TestNamespace::Float2>("TestNamespace::Float2");
 
     behaviac::Workspace::GetInstance()->Cleanup();
 }
@@ -104,7 +116,9 @@ AgentNodeTest* initTestEnvNode(const char* treePath, behaviac::Workspace::EFileF
 
 void finlTestEnvNode(AgentNodeTest* testAgent)
 {
-    BEHAVIAC_DELETE(testAgent);
+    //BEHAVIAC_DELETE(testAgent);
+	behaviac::Agent::Destroy(testAgent);
+
     unregisterAllTypes();
 
     behaviac::Profiler::DestroyInstance();
@@ -129,7 +143,8 @@ EmployeeParTestAgent* initTestEnvPar(const char* treePath, behaviac::Workspace::
 
 void finlTestEnvPar(EmployeeParTestAgent* testAgent)
 {
-    BEHAVIAC_DELETE(testAgent);
+    //BEHAVIAC_DELETE(testAgent);
+	behaviac::Agent::Destroy(testAgent);
     unregisterAllTypes();
 
     behaviac::Profiler::DestroyInstance();
@@ -1007,6 +1022,20 @@ LOAD_TEST(btunittest, const_param)
     CHECK_EQUAL(true, parTestAgent->TV_LIST_BOOL_0[1]);
     CHECK_EQUAL(false, parTestAgent->TV_LIST_BOOL_0[2]);
     finlTestEnvPar(parTestAgent);
+}
+
+LOAD_TEST(btunittest, cast_param)
+{
+	EmployeeParTestAgent* parTestAgent = initTestEnvPar("par_test/cast_param", format);
+	parTestAgent->resetProperties();
+	parTestAgent->TV_UINT_0 = 10;
+	parTestAgent->btexec();
+
+	CHECK_EQUAL(72, parTestAgent->TV_BYTE_0);
+	CHECK_EQUAL(10, parTestAgent->TV_SHORT_0);
+	CHECK_EQUAL(0, parTestAgent->TV_AGENT_0);
+
+	finlTestEnvPar(parTestAgent);
 }
 
 //< static_member_function_test_0

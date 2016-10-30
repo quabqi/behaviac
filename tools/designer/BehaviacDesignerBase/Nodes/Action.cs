@@ -60,7 +60,16 @@ namespace Behaviac.Design.Nodes
         protected EBTStatus _methodResultOption = EBTStatus.BT_SUCCESS;
         [DesignerEnum("StatusOption", "StatusOptionDesc", "Action", DesignerProperty.DisplayMode.NoDisplay, 2, DesignerProperty.DesignerFlags.NoFlags, "")]
         public EBTStatus ResultOption {
-            get { return _methodResultOption; }
+            get
+            {
+                if (_methodResultOption != EBTStatus.BT_INVALID && this.Method != null && "behaviac::EBTStatus" == this.Method.NativeReturnType)
+                {
+                    _methodResultOption = EBTStatus.BT_INVALID;
+                }
+
+                return _methodResultOption;
+            }
+
             set { _methodResultOption = value; }
         }
 
@@ -81,7 +90,7 @@ namespace Behaviac.Design.Nodes
 
         public override string DocLink
         {
-            get { return "http://www.behaviac.com/docs/zh/references/action/"; }
+            get { return "http://www.behaviac.com/language/zh/action/"; }
         }
 
         public override string Description {
@@ -95,31 +104,40 @@ namespace Behaviac.Design.Nodes
             }
         }
 
-        public override bool ResetMembers(bool check, AgentType agentType, bool clear, MethodDef method = null, PropertyDef property = null) {
+        public override bool ResetMembers(bool check, AgentType agentType, bool clear, MethodDef method = null, PropertyDef property = null)
+        {
             bool bReset = false;
 
-            if (this.Method != null) {
-                if (method != null && this.Method.Name == method.OldName &&
-                    (clear || this.Method.ShouldBeCleared(agentType))) {
+            if (this.Method != null)
+            {
+                if (clear || this.Method.ShouldBeCleared(agentType))
+                {
                     bReset = true;
 
                     if (!check)
-                    { this.Method = null; }
-
-                } else {
+                    {
+                        this.Method = null;
+                    }
+                }
+                else
+                {
                     bReset |= this.Method.ResetMembers(check, agentType, clear, method, property);
                 }
             }
 
-            if (this.ResultFunctor != null) {
-                if (method != null && this.ResultFunctor.Name == method.OldName &&
-                    (clear || this.Method.ShouldBeCleared(agentType))) {
+            if (this.ResultFunctor != null)
+            {
+                if (clear || this.Method.ShouldBeCleared(agentType))
+                {
                     bReset = true;
 
                     if (!check)
-                    { this.ResultFunctor = null; }
-
-                } else {
+                    {
+                        this.ResultFunctor = null;
+                    }
+                }
+                else
+                {
                     bReset |= this.ResultFunctor.ResetMembers(check, agentType, clear, method, property);
                 }
             }
